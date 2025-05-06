@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日挑战 - 数独学堂</title>
+    <meta name="description" content="数独学堂每日挑战，限时解锁专属谜题，提升解题速度与准确性。">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/print-sudoku.css">
+    <link rel="stylesheet" href="../css/solution-styles.css">
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 每日挑战特定样式 -->
+    <style>
+        /* 计时器样式 */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+        
+        /* 计时器图标 */
+        .timer-icon {
+            margin-right: var(--spacing-sm);
+        }
+        
+        /* 挑战信息 */
+        .challenge-info {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .challenge-date {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .challenge-difficulty {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+        }
+        
+        /* 难度星级 */
+        .difficulty-stars {
+            margin-left: var(--spacing-sm);
+            color: var(--highlight-color);
+        }
+        
+        /* 难度说明 */
+        .challenge-difficulty-info {
+            margin-top: var(--spacing-xs);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        /* 游戏控制区 */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+        }
+        
+        /* 数字选择区 */
+        .number-selector {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+        
+        .number-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-card);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .number-btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .number-btn.selected {
+            background-color: var(--accent-color);
+            color: var(--text-light);
+        }
+        
+        /* 功能按钮 */
+        .tool-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--secondary-color);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            transition: background-color 0.3s;
+        }
+        
+        .tool-btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        /* 尝试次数 */
+        .attempts-container {
+            margin-top: var(--spacing-lg);
+            text-align: center;
+            color: var(--text-secondary);
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--bg-secondary);
+        }
+        
+        .attempts-container i {
+            color: var(--accent-color);
+            margin-right: var(--spacing-xs);
+        }
+        
+        /* 结果面板样式 */
+        .result-panel {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--bg-card);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            text-align: center;
+            min-width: 300px;
+        }
+        
+        .result-title {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .result-stats {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .overlay {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        /* 笔记模式指示器 */
+        .mode-indicator {
+            display: inline-block;
+            margin-left: var(--spacing-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.8rem;
+        }
+        
+        /* 错误信息样式 */
+        .error-message {
+            background-color: #fff3f3;
+            border: 1px solid #ffcaca;
+            color: #e53e3e;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            text-align: center;
+            display: none; /* 默认隐藏 */
+        }
+        
+        .error-message i {
+            margin-right: var(--spacing-xs);
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">每日挑战 - 持续提升解题能力</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="#" class="active">每日挑战</a>
+                    <a href="classic-mode.html">经典模式</a>
+                    <a href="learning-center.html">学习中心</a>
+                    <a href="recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 错误信息区域 -->
+        <div class="error-message" id="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="error-text">加载数独时遇到问题，部分功能可能无法正常使用。</span>
+        </div>
+        
+        <!-- 挑战信息 -->
+        <section class="challenge-info">
+            <div class="challenge-date" id="challenge-date">2023年6月15日 每日挑战</div>
+            <div>
+                <span class="challenge-difficulty">难度：
+                    <span class="difficulty-stars">★★★☆☆</span>
+                </span>
+            </div>
+            <div class="challenge-difficulty-info">
+                <small>难度会随星期变化：周一简单(★)，难度逐日递增，周日最难(★★★★★)</small>
+            </div>
+        </section>
+        
+        <!-- 计时器 -->
+        <div class="timer-container">
+            <div class="timer-icon"><i class="fas fa-clock"></i></div>
+            <div id="timer">00:00</div>
+        </div>
+        
+        <!-- 数独游戏区 -->
+        <section class="game-area">
+            <div class="sudoku-grid" id="challenge-grid">
+                <!-- 数独格子将通过JS动态生成 -->
+            </div>
+            
+            <!-- 数字选择器 -->
+            <div class="number-selector" id="number-selector">
+                <div class="number-btn" data-number="1">1</div>
+                <div class="number-btn" data-number="2">2</div>
+                <div class="number-btn" data-number="3">3</div>
+                <div class="number-btn" data-number="4">4</div>
+                <div class="number-btn" data-number="5">5</div>
+                <div class="number-btn" data-number="6">6</div>
+                <div class="number-btn" data-number="7">7</div>
+                <div class="number-btn" data-number="8">8</div>
+                <div class="number-btn" data-number="9">9</div>
+                <div class="number-btn" data-number="0">
+                    <i class="fas fa-eraser"></i>
+                </div>
+            </div>
+            
+            <!-- 游戏控制区 -->
+            <div class="game-controls">
+                <button class="tool-btn" id="hint-btn">
+                    <i class="fas fa-lightbulb"></i> 提示
+                </button>
+                <button class="tool-btn" id="notes-btn">
+                    <i class="fas fa-pencil-alt"></i> 笔记模式
+                    <span class="mode-indicator" id="notes-indicator">关闭</span>
+                </button>
+                <button class="tool-btn" id="check-btn">
+                    <i class="fas fa-check-circle"></i> 检查
+                </button>
+                <button class="tool-btn" id="reset-btn">
+                    <i class="fas fa-redo"></i> 重置
+                </button>
+                <button class="tool-btn" id="print-btn">
+                    <i class="fas fa-download"></i> 下载题目
+                </button>
+                <button class="tool-btn" id="show-solution-btn">
+                    <i class="fas fa-eye"></i> 查看答案
+                </button>
+                <button class="tool-btn" id="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> 刷新挑战
+                </button>
+            </div>
+            
+            <!-- 尝试次数 -->
+            <div class="attempts-container">
+                <p><i class="fas fa-info-circle"></i> 每日挑战会在每天凌晨自动更新，尽情挑战今日数独吧！</p>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 结果弹窗 -->
+    <div class="overlay" id="result-overlay"></div>
+    <div class="result-panel" id="result-panel">
+        <h2 class="result-title" id="result-title">恭喜完成！</h2>
+        <div class="result-stats">
+            <div class="stat-item">
+                <span>用时：</span>
+                <span id="result-time">00:00</span>
+            </div>
+            <div class="stat-item">
+                <span>使用提示：</span>
+                <span id="result-hints">0次</span>
+            </div>
+            <div class="stat-item">
+                <span>错误次数：</span>
+                <span id="result-errors">0次</span>
+            </div>
+        </div>
+        <button class="btn" id="share-btn">分享成绩</button>
+        <button class="btn btn-secondary" id="close-result-btn">关闭</button>
+    </div>
+    
+    <!-- 页面底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="quote-carousel">
+                <p>"每天的挑战，铸就非凡的能力。"</p>
+            </div>
+            
+            <div class="quick-links">
+                <a href="learning-center.html">学习中心</a>
+                <a href="recommended-books.html">名著推荐</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 引入JavaScript文件 -->
+    <script src="../js/daily-challenge.js?v=1.1"></script>
+    <!-- 引入打印和下载相关库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" onerror="handleScriptError('PDF生成库加载失败')"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" onerror="handleScriptError('Canvas库加载失败')"></script>
+    <!-- 引入打印功能 -->
+    <script src="../js/print-sudoku.js?v=1.1"></script>
+    <!-- 引入查看答案功能 -->
+    <script src="../js/show-solution.js?v=1.1"></script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="../css/floating-ball.css?v=1.1">
+    <script src="../js/floating-ball.js?v=1.1"></script>
+    
+    <!-- 添加错误处理脚本 -->
+    <script>
+        // 处理脚本加载错误
+        function handleScriptError(message) {
+            console.error('资源加载错误:', message);
+            showErrorMessage(message + '，但基本功能仍然可用。');
+        }
+        
+        // 显示错误信息
+        function showErrorMessage(message) {
+            const errorElement = document.getElementById('error-message');
+            const errorTextElement = document.getElementById('error-text');
+            
+            if (errorElement && errorTextElement) {
+                errorTextElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        }
+        
+        // 处理广告拦截器问题
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK') {
+                if (e.target.src && e.target.src.includes('zijieapi.com')) {
+                    console.warn('检测到广告拦截器可能阻止了资源加载:', e.target.src);
+                    showErrorMessage('部分外部资源被浏览器拦截，但不影响游戏核心功能。');
+                }
+            }
+        }, true);
+        
+        // 添加刷新挑战按钮事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.getElementById('refresh-btn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    if (confirm('确定要刷新今日挑战吗？当前进度将丢失。')) {
+                        // 清除所有数独挑战相关的localStorage项
+                        try {
+                            const keys = Object.keys(localStorage);
+                            for (const key of keys) {
+                                if (key.startsWith('sudoku_daily_')) {
+                                    localStorage.removeItem(key);
+                                }
+                            }
+                            // 重新加载页面
+                            window.location.reload();
+                        } catch (error) {
+                            console.error('刷新挑战失败:', error);
+                            alert('刷新挑战失败，请手动刷新页面。');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

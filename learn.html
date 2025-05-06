@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数独学习 - 数独学堂</title>
+    <meta name="description" content="数独学习教程，从基础规则到高级解题技巧，帮助您掌握数独解题方法">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/learn.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header class="header">
+        <div class="container">
+            <!-- 网站logo和标题 -->
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.png" alt="数独学堂logo">
+                    <h1>数独学堂</h1>
+                </a>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="learn.html" class="active">学习</a></li>
+                    <li><a href="practice.html">练习</a></li>
+                    <li><a href="challenge.html">挑战</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主要内容 -->
+    <main class="learn-main">
+        <div class="container">
+            <!-- 学习页面标题 -->
+            <div class="learn-header">
+                <h2>数独学习中心</h2>
+                <p>从基础到高级，系统掌握数独解题技巧</p>
+                
+                <!-- 学习进度条 -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <span class="progress-text">0% 完成</span>
+                </div>
+            </div>
+            
+            <!-- 页面主体部分 -->
+            <div class="learn-content">
+                <!-- 左侧菜单 -->
+                <aside class="learn-sidebar">
+                    <nav class="learn-menu">
+                        <h3>学习目录</h3>
+                        <ul>
+                            <li><a href="#introduction" class="active">数独简介</a></li>
+                            <li><a href="#basic-rules">基本规则</a></li>
+                            <li><a href="#difficulty-levels">难度级别</a></li>
+                            <li><a href="#basic-techniques">基础技巧</a></li>
+                            <li><a href="#intermediate-techniques">中级技巧</a></li>
+                            <li><a href="#advanced-techniques">高级技巧</a></li>
+                            <li><a href="#practice-area">实战练习</a></li>
+                        </ul>
+                        
+                        <!-- 下载教程按钮 -->
+                        <div class="download-section">
+                            <button class="download-btn">下载完整教程(PDF)</button>
+                        </div>
+                    </nav>
+                </aside>
+                
+                <!-- 右侧内容区域 -->
+                <div class="learn-sections">
+                    <!-- 数独简介部分 -->
+                    <section id="introduction" class="learn-section">
+                        <h3>数独简介</h3>
+                        <div class="learn-card">
+                            <div class="card-content">
+                                <h4>什么是数独？</h4>
+                                <p>数独(Sudoku)是一种逻辑性数字填充游戏，起源于18世纪的瑞士。现代形式的数独在1979年由美国建筑师Howard Garns发明，并于1980年代在日本流行起来。"数独"一词来自日语"数字は独身に限る"的缩写，意为"数字必须单独出现"。</p>
+                                
+                                <div class="image-container">
+                                    <img src="images/sudoku-example.png" alt="数独示例">
+                                    <p class="image-caption">图1: 标准9x9数独示例</p>
+                                </div>
+                                
+                                <h4>数独的益处</h4>
+                                <ul>
+                                    <li>锻炼逻辑思维能力</li>
+                                    <li>提高专注力和耐心</li>
+                                    <li>延缓大脑衰老</li>
+                                    <li>减轻压力，放松心情</li>
+                                    <li>提高问题解决能力</li>
+                                </ul>
+                                
+                                <p>数独不需要复杂的数学知识，只需要逻辑思维和耐心。它适合各个年龄段的人群，从儿童到老年人都能从中获益。</p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- 基本规则部分 -->
+                    <section id="basic-rules" class="learn-section">
+                        <h3>基本规则</h3>
+                        <div class="learn-card">
+                            <div class="card-content">
+                                <h4>数独规则</h4>
+                                <p>标准数独是在9×9的网格中进行的游戏，网格被分为9个3×3的子网格（也称为"宫"）。游戏目标是在网格的空白位置填入数字1到9，使得每行、每列和每个3×3子网格中的数字都不重复。</p>
+                                
+                                <div class="rules-grid">
+                                    <div class="rule-item">
+                                        <div class="rule-icon">🔢</div>
+                                        <div class="rule-desc">
+                                            <h5>数字范围</h5>
+                                            <p>只能使用1到9的数字</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="rule-item">
+                                        <div class="rule-icon">↔️</div>
+                                        <div class="rule-desc">
+                                            <h5>行规则</h5>
+                                            <p>每行必须包含1到9的所有数字，不能重复</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="rule-item">
+                                        <div class="rule-icon">↕️</div>
+                                        <div class="rule-desc">
+                                            <h5>列规则</h5>
+                                            <p>每列必须包含1到9的所有数字，不能重复</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="rule-item">
+                                        <div class="rule-icon">🔲</div>
+                                        <div class="rule-desc">
+                                            <h5>宫规则</h5>
+                                            <p>每个3×3宫必须包含1到9的所有数字，不能重复</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="image-container">
+                                    <img src="images/sudoku-rules.png" alt="数独规则图解">
+                                    <p class="image-caption">图2: 数独规则图解 - 行、列和宫</p>
+                                </div>
+                                
+                                <p>标准数独只有一个唯一解。根据这些规则，通过逻辑推理可以确定每个格子中应该填入的数字。</p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- 难度级别部分 -->
+                    <section id="difficulty-levels" class="learn-section">
+                        <h3>难度级别</h3>
+                        <div class="learn-card">
+                            <div class="card-content">
+                                <h4>数独难度划分</h4>
+                                <p>数独谜题的难度主要取决于初始提供的数字数量和需要使用的解题技巧复杂度。以下是常见的难度级别：</p>
+                                
+                                <div class="difficulty-levels">
+                                    <div class="difficulty-item">
+                                        <div class="difficulty-badge easy">简单</div>
+                                        <div class="difficulty-desc">
+                                            <p>特点：提供30-35个初始数字，只需使用基础技巧即可解决。</p>
+                                            <p>适合：初学者，解题时间通常在5-15分钟。</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="difficulty-item">
+                                        <div class="difficulty-badge medium">中等</div>
+                                        <div class="difficulty-desc">
+                                            <p>特点：提供25-30个初始数字，需要结合一些中级技巧。</p>
+                                            <p>适合：有一定解题经验的玩家，解题时间通常在15-30分钟。</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="difficulty-item">
+                                        <div class="difficulty-badge hard">困难</div>
+                                        <div class="difficulty-desc">
+                                            <p>特点：提供22-27个初始数字，需要使用多种中高级技巧。</p>
+                                            <p>适合：有丰富经验的玩家，解题时间通常在30-60分钟。</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="difficulty-item">
+                                        <div class="difficulty-badge expert">专家</div>
+                                        <div class="difficulty-desc">
+                                            <p>特点：提供17-22个初始数字，需要使用高级技巧和复杂的逻辑推理。</p>
+                                            <p>适合：精通数独的玩家，解题时间可能超过60分钟。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="image-container">
+                                    <img src="images/difficulty-comparison.png" alt="不同难度级别的数独对比">
+                                    <p class="image-caption">图3: 不同难度级别的数独初始数字对比</p>
+                                </div>
+                                
+                                <p>注意：难度评定标准可能因平台而异，但一般遵循上述原则。随着您解题经验的增加，可以逐渐尝试更高难度的题目。</p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- 基础技巧部分 -->
+                    <section id="basic-techniques" class="learn-section">
+                        <h3>基础技巧</h3>
+                        <div class="learn-card">
+                            <div class="card-content">
+                                <h4>入门解题技巧</h4>
+                                <p>以下是解决简单到中等难度数独的基础技巧：</p>
+                                
+                                <div class="technique-item">
+                                    <h5>唯一候选数 (Sole Candidate)</h5>
+                                    <p>当一个格子只有一个可能的数字时，该数字必定是此格子的解。</p>
+                                    <div class="image-container">
+                                        <img src="images/sole-candidate.png" alt="唯一候选数技巧示例">
+                                        <p class="image-caption">图4: 唯一候选数技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>唯一位置 (Unique Placement)</h5>
+                                    <p>当一个数字在某行、列或宫中只有一个可能的位置时，该位置必定填入此数字。</p>
+                                    <div class="image-container">
+                                        <img src="images/unique-placement.png" alt="唯一位置技巧示例">
+                                        <p class="image-caption">图5: 唯一位置技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>候选数记录 (Pencil Marking)</h5>
+                                    <p>在每个空格中记录所有可能的数字，随着解题过程逐步排除不可能的候选数。</p>
+                                    <div class="image-container">
+                                        <img src="images/pencil-marking.png" alt="候选数记录示例">
+                                        <p class="image-caption">图6: 候选数记录示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>扫描法 (Scanning)</h5>
+                                    <p>通过系统地扫描行、列和宫，快速定位某个数字可能的位置。</p>
+                                    <p>行列交叉扫描：找到某个数字在某行/列的可能位置，再从相交的列/行进一步缩小范围。</p>
+                                </div>
+                                
+                                <div class="practice-tip">
+                                    <h5>练习建议</h5>
+                                    <p>掌握这些基础技巧后，尝试解决我们的简单难度数独。当这些技巧变得熟练后，您可以进一步学习更高级的解题方法。</p>
+                                    <a href="practice.html?difficulty=easy" class="practice-link">练习简单难度数独 →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- 中级技巧部分 -->
+                    <section id="intermediate-techniques" class="learn-section">
+                        <h3>中级技巧</h3>
+                        <div class="learn-card">
+                            <div class="card-content">
+                                <h4>进阶解题技巧</h4>
+                                <p>以下技巧适用于中等到困难难度的数独：</p>
+                                
+                                <div class="technique-item">
+                                    <h5>数对 (Naked Pairs)</h5>
+                                    <p>当同一行、列或宫中有两个格子的候选数完全相同且只有两个可能值时，这两个值只能出现在这两个格子中，可以从同行、列或宫的其他格子中排除这两个数字。</p>
+                                    <div class="image-container">
+                                        <img src="images/naked-pairs.png" alt="数对技巧示例">
+                                        <p class="image-caption">图7: 数对技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>隐藏数对 (Hidden Pairs)</h5>
+                                    <p>当某两个数字在某行、列或宫中只可能出现在两个格子中(这两个格子可能还有其他候选数)，则这两个格子的其他候选数可以被排除。</p>
+                                    <div class="image-container">
+                                        <img src="images/hidden-pairs.png" alt="隐藏数对技巧示例">
+                                        <p class="image-caption">图8: 隐藏数对技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>区块摒除法 (Block-Line Interaction)</h5>
+                                    <p>包括指向摒除和宫内摒除两种类型：</p>
+                                    <ul>
+                                        <li><strong>指向摒除</strong>：当某数字在一个宫内只出现在同一行或列中时，该数字在此行或列的其他宫中可以被排除。</li>
+                                        <li><strong>宫内摒除</strong>：当某数字在一行或列内只出现在同一宫中时，该数字在此宫的其他行或列中可以被排除。</li>
+                                    </ul>
+                                    <div class="image-container">
+                                        <img src="images/block-line-interaction.png" alt="区块摒除法示例">
+                                        <p class="image-caption">图9: 区块摒除法示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>三数集 (Naked Triple)</h5>
+                                    <p>当同一行、列或宫中有三个格子的候选数只由三个数字组成时，这三个数字只能出现在这三个格子中，可以从同行、列或宫的其他格子中排除这三个数字。</p>
+                                </div>
+                                
+                                <div class="practice-tip">
+                                    <h5>练习建议</h5>
+                                    <p>这些中级技巧需要更多的练习才能熟练掌握。建议先专注于一种技巧，在多个谜题中识别和应用它，然后再学习下一种技巧。</p>
+                                    <a href="practice.html?difficulty=medium" class="practice-link">练习中等难度数独 →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- 高级技巧部分 -->
+                    <section id="advanced-techniques" class="learn-section">
+                        <h3>高级技巧</h3>
+                        <div class="learn-card">
+                            <div class="card-content">
+                                <h4>专家解题技巧</h4>
+                                <p>以下高级技巧用于解决困难和专家级数独：</p>
+                                
+                                <div class="technique-item">
+                                    <h5>X翼 (X-Wing)</h5>
+                                    <p>当某个数字的候选位置在两行中各自限制在相同的两列时，可以排除这两列其他行中的该数字候选。列的X翼与此类似。</p>
+                                    <div class="image-container">
+                                        <img src="images/x-wing.png" alt="X翼技巧示例">
+                                        <p class="image-caption">图10: X翼技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>剑鱼 (Swordfish)</h5>
+                                    <p>X翼的扩展版本，涉及三行和三列。当某个数字的候选位置在三行中各自限制在相同的三列中时，可以排除这三列其他行中的该数字候选。</p>
+                                    <div class="image-container">
+                                        <img src="images/swordfish.png" alt="剑鱼技巧示例">
+                                        <p class="image-caption">图11: 剑鱼技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>链式规则 (Chains)</h5>
+                                    <p>包括强链和弱链，通过建立数字之间的逻辑关系链来排除特定格子中的候选数。</p>
+                                    <ul>
+                                        <li><strong>XY链</strong>：通过一系列共享候选数的单元格建立逻辑链，用于排除链外特定位置的候选数。</li>
+                                        <li><strong>远程对 (Remote Pair)</strong>：在多个格子之间建立的双值候选数链。</li>
+                                    </ul>
+                                    <div class="image-container">
+                                        <img src="images/chains.png" alt="链式规则技巧示例">
+                                        <p class="image-caption">图12: 链式规则技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>唯一矩形 (Unique Rectangle)</h5>
+                                    <p>避免产生多解的矩形模式，通过识别可能导致多解的矩形模式来确定某些格子的值。</p>
+                                    <div class="image-container">
+                                        <img src="images/unique-rectangle.png" alt="唯一矩形技巧示例">
+                                        <p class="image-caption">图13: 唯一矩形技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="technique-item">
+                                    <h5>强制链 (Forcing Chain)</h5>
+                                    <p>通过假设某个格子的值，跟踪其逻辑后果，直到发现矛盾或得出确定的结论。</p>
+                                    <div class="image-container">
+                                        <img src="images/forcing-chain.png" alt="强制链技巧示例">
+                                        <p class="image-caption">图14: 强制链技巧示例</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="practice-tip">
+                                    <h5>练习建议</h5>
+                                    <p>这些高级技巧需要大量实践和深入理解。建议配合专家的解题分析一起学习，逐步理解每种技巧的应用场景。</p>
+                                    <a href="practice.html?difficulty=hard" class="practice-link">练习困难难度数独 →</a>
+                                    <a href="practice.html?difficulty=expert" class="practice-link">挑战专家级数独 →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- 实战练习部分 -->
+                    <section id="practice-area" class="learn-section">
+                        <h3>实战练习</h3>
+                        <div class="learn-card">
+                            <div class="card-content">
+                                <h4>应用技巧解题</h4>
+                                <p>以下是一些针对特定技巧的练习题，帮助您巩固所学知识：</p>
+                                
+                                <div class="practice-example">
+                                    <h5>练习1：应用唯一候选数和唯一位置</h5>
+                                    <div class="example-sudoku">
+                                        <img src="images/practice-basic.png" alt="基础技巧练习题">
+                                    </div>
+                                    <div class="example-controls">
+                                        <button class="hint-btn" data-hint="hint-1">显示提示</button>
+                                        <button class="solution-btn" data-solution="solution-1">显示解答</button>
+                                    </div>
+                                    <div id="hint-1" class="hint-box">
+                                        <p>提示：关注第5行和第3列的空格，应用唯一候选数技巧。然后检查第7宫中数字4的可能位置，应用唯一位置技巧。</p>
+                                    </div>
+                                    <div id="solution-1" class="solution-box">
+                                        <p>解答步骤：</p>
+                                        <ol>
+                                            <li>第5行第8格只能填6（唯一候选数）</li>
+                                            <li>第3列第4格只能填7（唯一候选数）</li>
+                                            <li>第7宫中数字4只能填在第8行第3格（唯一位置）</li>
+                                            <li>继续应用这些技巧可以解出更多格子...</li>
+                                        </ol>
+                                        <img src="images/practice-basic-solution.png" alt="基础技巧练习题解答">
+                                    </div>
+                                </div>
+                                
+                                <div class="practice-example">
+                                    <h5>练习2：应用数对和区块摒除法</h5>
+                                    <div class="example-sudoku">
+                                        <img src="images/practice-intermediate.png" alt="中级技巧练习题">
+                                    </div>
+                                    <div class="example-controls">
+                                        <button class="hint-btn" data-hint="hint-2">显示提示</button>
+                                        <button class="solution-btn" data-solution="solution-2">显示解答</button>
+                                    </div>
+                                    <div id="hint-2" class="hint-box">
+                                        <p>提示：第1行第4格和第1行第7格形成数对[2,8]。第2宫中，数字3只可能出现在第1列，应用指向摒除技巧。</p>
+                                    </div>
+                                    <div id="solution-2" class="solution-box">
+                                        <p>解答步骤：</p>
+                                        <ol>
+                                            <li>第1行第4格和第1行第7格形成数对[2,8]，第1行其他格子可排除2和8</li>
+                                            <li>第2宫中，数字3只可能出现在第1列，因此第4宫和第7宫的第1列可排除数字3</li>
+                                            <li>第5列中，第5行和第6行的格子形成数对[4,7]，第5列其他格子可排除4和7</li>
+                                            <li>继续应用这些技巧可以解出更多格子...</li>
+                                        </ol>
+                                        <img src="images/practice-intermediate-solution.png" alt="中级技巧练习题解答">
+                                    </div>
+                                </div>
+                                
+                                <div class="practice-example">
+                                    <h5>练习3：应用X翼和唯一矩形</h5>
+                                    <div class="example-sudoku">
+                                        <img src="images/practice-advanced.png" alt="高级技巧练习题">
+                                    </div>
+                                    <div class="example-controls">
+                                        <button class="hint-btn" data-hint="hint-3">显示提示</button>
+                                        <button class="solution-btn" data-solution="solution-3">显示解答</button>
+                                    </div>
+                                    <div id="hint-3" class="hint-box">
+                                        <p>提示：第2行和第8行中，数字5都只可能出现在第3列和第7列，形成X翼结构。另外，检查第4行第3格、第4行第6格、第6行第3格和第6行第6格是否形成唯一矩形。</p>
+                                    </div>
+                                    <div id="solution-3" class="solution-box">
+                                        <p>解答步骤：</p>
+                                        <ol>
+                                            <li>第2行和第8行中，数字5只可能出现在第3列和第7列，形成X翼结构，可排除第3列和第7列其他行中的数字5</li>
+                                            <li>第4行第3格、第4行第6格、第6行第3格和第6行第6格形成唯一矩形，通过分析避免多解情况，可确定第4行第3格为8</li>
+                                            <li>继续应用这些技巧和其他高级技巧可以解出更多格子...</li>
+                                        </ol>
+                                        <img src="images/practice-advanced-solution.png" alt="高级技巧练习题解答">
+                                    </div>
+                                </div>
+                                
+                                <div class="more-practice">
+                                    <h5>更多练习</h5>
+                                    <p>想要更多的练习机会？访问我们的练习页面，选择适合您水平的难度级别，系统会根据您的解题情况推荐适合的题目。</p>
+                                    <a href="practice.html" class="practice-link primary">前往练习中心</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 页面底部 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="images/logo-small.png" alt="数独学堂logo">
+                    <span>数独学堂</span>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>网站导航</h4>
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="learn.html">学习</a></li>
+                            <li><a href="practice.html">练习</a></li>
+                            <li><a href="challenge.html">挑战</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>学习资源</h4>
+                        <ul>
+                            <li><a href="learn.html#basic-techniques">基础技巧</a></li>
+                            <li><a href="learn.html#intermediate-techniques">中级技巧</a></li>
+                            <li><a href="learn.html#advanced-techniques">高级技巧</a></li>
+                            <li><a href="practice.html">练习题库</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>关于我们</h4>
+                        <ul>
+                            <li><a href="about.html">关于数独学堂</a></li>
+                            <li><a href="contact.html">联系我们</a></li>
+                            <li><a href="privacy.html">隐私政策</a></li>
+                            <li><a href="terms.html">使用条款</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">© 2023 数独学堂. 保留所有权利.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="微信" title="微信"><span class="social-icon">📱</span></a>
+                    <a href="#" aria-label="微博" title="微博"><span class="social-icon">📣</span></a>
+                    <a href="#" aria-label="GitHub" title="GitHub"><span class="social-icon">💻</span></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/common.js"></script>
+    <script src="js/learn.js"></script>
+</body>
+</html> 

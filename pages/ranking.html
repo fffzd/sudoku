@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排行榜 - 数独游戏</title>
+    <meta name="description" content="数独游戏排行榜，查看不同难度级别的最佳解题时间和用户排名">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/ranking.css">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">排行榜 - 顶尖玩家的殿堂</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="daily-challenge.html">每日挑战</a>
+                    <a href="classic-mode.html">经典模式</a>
+                    <a href="learning-mode.html">学习模式</a>
+                    <a href="learning-center.html">学习中心</a>
+                    <a href="recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="ranking-container">
+        <!-- 排行榜标题 -->
+        <div class="ranking-header">
+            <h2>数独排行榜</h2>
+            <p>挑战自我，与其他玩家一较高下！</p>
+        </div>
+
+        <!-- 排行榜筛选器 -->
+        <div class="ranking-filters">
+            <div class="filter-group">
+                <label for="difficulty-filter">难度</label>
+                <select id="difficulty-filter" class="filter-select">
+                    <option value="all">全部难度</option>
+                    <option value="easy">简单</option>
+                    <option value="medium">中等</option>
+                    <option value="hard">困难</option>
+                    <option value="expert">专家</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="time-filter">时间段</label>
+                <select id="time-filter" class="filter-select">
+                    <option value="all-time">全部时间</option>
+                    <option value="this-week">本周</option>
+                    <option value="this-month">本月</option>
+                    <option value="this-year">今年</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="view-type">查看方式</label>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="table">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button class="view-btn" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 排行榜内容 - 表格视图 -->
+        <div class="ranking-table-view active">
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>玩家</th>
+                        <th>难度</th>
+                        <th>用时</th>
+                        <th>完成日期</th>
+                        <th>错误数</th>
+                        <th>提示使用</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 前10名玩家 -->
+                    <tr class="top-rank">
+                        <td class="rank-cell">1</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar1.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">数独大师</span>
+                            </div>
+                        </td>
+                        <td>专家</td>
+                        <td class="time-cell">03:45</td>
+                        <td>2023-10-15</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="top-rank">
+                        <td class="rank-cell">2</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar2.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">逻辑思维家</span>
+                            </div>
+                        </td>
+                        <td>专家</td>
+                        <td class="time-cell">04:12</td>
+                        <td>2023-10-18</td>
+                        <td>1</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="top-rank">
+                        <td class="rank-cell">3</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar3.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">快速解题者</span>
+                            </div>
+                        </td>
+                        <td>专家</td>
+                        <td class="time-cell">04:30</td>
+                        <td>2023-10-20</td>
+                        <td>0</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">4</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar4.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">数字爱好者</span>
+                            </div>
+                        </td>
+                        <td>困难</td>
+                        <td class="time-cell">05:23</td>
+                        <td>2023-10-22</td>
+                        <td>2</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">5</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar5.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">谜题解决者</span>
+                            </div>
+                        </td>
+                        <td>困难</td>
+                        <td class="time-cell">05:47</td>
+                        <td>2023-10-19</td>
+                        <td>1</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">6</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar6.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">思维锻炼者</span>
+                            </div>
+                        </td>
+                        <td>中等</td>
+                        <td class="time-cell">06:15</td>
+                        <td>2023-10-21</td>
+                        <td>0</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">7</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar7.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">数独爱好者</span>
+                            </div>
+                        </td>
+                        <td>中等</td>
+                        <td class="time-cell">06:32</td>
+                        <td>2023-10-23</td>
+                        <td>3</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">8</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar8.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">休闲玩家</span>
+                            </div>
+                        </td>
+                        <td>简单</td>
+                        <td class="time-cell">07:05</td>
+                        <td>2023-10-24</td>
+                        <td>1</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">9</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar9.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">初学者</span>
+                            </div>
+                        </td>
+                        <td>简单</td>
+                        <td class="time-cell">07:48</td>
+                        <td>2023-10-25</td>
+                        <td>2</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">10</td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <img src="../images/avatars/avatar10.png" alt="玩家头像" class="player-avatar">
+                                <span class="player-name">数独新手</span>
+                            </div>
+                        </td>
+                        <td>简单</td>
+                        <td class="time-cell">08:22</td>
+                        <td>2023-10-26</td>
+                        <td>4</td>
+                        <td>2</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 分页控制 -->
+            <div class="pagination">
+                <button class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <span class="pagination-ellipsis">...</span>
+                <button class="pagination-btn">10</button>
+                <button class="pagination-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 排行榜内容 - 网格视图 -->
+        <div class="ranking-grid-view">
+            <div class="ranking-grid">
+                <!-- 第1名 -->
+                <div class="ranking-card top-rank">
+                    <div class="card-rank">1</div>
+                    <div class="card-medal">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <img src="../images/avatars/avatar1.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">数独大师</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>专家难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>03:45</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>2023-10-15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第2名 -->
+                <div class="ranking-card top-rank">
+                    <div class="card-rank">2</div>
+                    <div class="card-medal">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <img src="../images/avatars/avatar2.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">逻辑思维家</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>专家难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>04:12</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>2023-10-18</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第3名 -->
+                <div class="ranking-card top-rank">
+                    <div class="card-rank">3</div>
+                    <div class="card-medal">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <img src="../images/avatars/avatar3.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">快速解题者</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>专家难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>04:30</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>使用1次提示</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 其他玩家 -->
+                <div class="ranking-card">
+                    <div class="card-rank">4</div>
+                    <img src="../images/avatars/avatar4.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">数字爱好者</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>困难难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>05:23</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ranking-card">
+                    <div class="card-rank">5</div>
+                    <img src="../images/avatars/avatar5.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">谜题解决者</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>困难难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>05:47</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ranking-card">
+                    <div class="card-rank">6</div>
+                    <img src="../images/avatars/avatar6.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">思维锻炼者</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>中等难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>06:15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ranking-card">
+                    <div class="card-rank">7</div>
+                    <img src="../images/avatars/avatar7.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">数独爱好者</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>中等难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>06:32</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ranking-card">
+                    <div class="card-rank">8</div>
+                    <img src="../images/avatars/avatar8.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">休闲玩家</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>简单难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>07:05</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ranking-card">
+                    <div class="card-rank">9</div>
+                    <img src="../images/avatars/avatar9.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">初学者</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>简单难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>07:48</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ranking-card">
+                    <div class="card-rank">10</div>
+                    <img src="../images/avatars/avatar10.png" alt="玩家头像" class="card-avatar">
+                    <div class="card-info">
+                        <h3 class="card-name">数独新手</h3>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <i class="fas fa-trophy"></i>
+                                <span>简单难度</span>
+                            </div>
+                            <div class="card-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>08:22</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 网格视图的分页控制 -->
+            <div class="pagination">
+                <button class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <span class="pagination-ellipsis">...</span>
+                <button class="pagination-btn">10</button>
+                <button class="pagination-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 统计数据 -->
+        <div class="ranking-stats">
+            <h3>数独解题统计</h3>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-value">15,342</span>
+                        <span class="stat-label">解题总数</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-value">05:47</span>
+                        <span class="stat-label">平均用时</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-value">4,872</span>
+                        <span class="stat-label">参与玩家</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-value">843</span>
+                        <span class="stat-label">完成专家难度</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 我的排名 -->
+        <div class="my-ranking">
+            <h3>我的排名</h3>
+            <div class="my-ranking-card">
+                <div class="my-avatar">
+                    <img src="../images/avatars/user.png" alt="我的头像">
+                </div>
+                <div class="my-info">
+                    <div class="my-name">
+                        <h4>我的账户</h4>
+                        <span class="my-rank">#42</span>
+                    </div>
+                    <div class="my-stats">
+                        <div class="my-stat">
+                            <span class="stat-label">最佳难度</span>
+                            <span class="stat-value">中等</span>
+                        </div>
+                        <div class="my-stat">
+                            <span class="stat-label">最佳时间</span>
+                            <span class="stat-value">08:45</span>
+                        </div>
+                        <div class="my-stat">
+                            <span class="stat-label">完成数量</span>
+                            <span class="stat-value">23</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="view-profile-btn">
+                    <button class="btn">查看我的数据</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2023 数独游戏 版权所有</p>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">联系方式</a>
+                <a href="#">隐私政策</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 文件 -->
+    <script src="../js/common.js"></script>
+    <script src="../js/ranking.js"></script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="../css/floating-ball.css">
+    <script src="../js/floating-ball.js"></script>
+</body>
+</html> 

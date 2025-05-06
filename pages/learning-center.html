@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习中心 - 数独学堂</title>
+    <meta name="description" content="数独学堂学习中心，提供从入门到精通的数独解题技巧，图文并茂的教程和交互式演示帮助你掌握各种解题方法。">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 学习中心特定样式 -->
+    <style>
+        /* 学习中心布局 */
+        .learning-center-container {
+            margin-top: var(--spacing-lg);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 侧边导航 */
+        .learning-nav {
+            width: 250px;
+            flex-shrink: 0;
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        
+        .nav-title {
+            font-size: 1.2rem;
+            padding-bottom: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--secondary-color);
+            color: #000000;
+        }
+        
+        .nav-section {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .nav-section-title {
+            font-weight: bold;
+            margin-bottom: var(--spacing-sm);
+            color: #000000;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .nav-section-title i {
+            margin-right: var(--spacing-sm);
+            transition: transform 0.3s;
+        }
+        
+        .nav-section-title.collapsed i {
+            transform: rotate(-90deg);
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding-left: var(--spacing-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+        
+        .nav-link {
+            display: block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            color: #000000;
+            text-decoration: none;
+            transition: color 0.3s, background-color 0.3s, transform 0.2s;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+        }
+        
+        .nav-link:hover {
+            color: #000000;
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: translateX(3px);
+        }
+        
+        .nav-link.active {
+            color: white;
+            font-weight: bold;
+            background-color: var(--accent-color);
+        }
+        
+        /* 学习内容区 */
+        .learning-content {
+            width: 100%;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: var(--spacing-sm);
+            text-align: center;
+        }
+        
+        /* 教程卡片 */
+        .tutorial-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .tutorial-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .tutorial-image {
+            width: 100%;
+            height: 160px;
+            background-color: var(--bg-secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .tutorial-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .tutorial-card:hover .tutorial-image img {
+            transform: scale(1.05);
+        }
+        
+        .tutorial-content {
+            padding: var(--spacing-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .tutorial-title {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .tutorial-desc {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.9rem;
+        }
+        
+        .difficulty-label {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .difficulty-beginner {
+            background-color: #e0f2fe;
+            color: #3b82f6;
+        }
+        
+        .difficulty-intermediate {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        
+        .difficulty-advanced {
+            background-color: #fee2e2;
+            color: #ef4444;
+        }
+        
+        /* 演示区域 */
+        .demonstration-area {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .demo-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .demo-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+        
+        .demo-grid-container {
+            display: flex;
+            justify-content: center;
+            perspective: 800px;
+            height: 400px;
+        }
+        
+        .demo-grid {
+            width: 350px;
+            height: 350px;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+        
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+        }
+        
+        /* 技巧解说 */
+        .technique-section {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .technique-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            padding-left: var(--spacing-md);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .technique-desc {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .example-grid {
+            margin: var(--spacing-lg) auto;
+            max-width: 350px;
+        }
+        
+        .step-by-step {
+            margin-top: var(--spacing-lg);
+        }
+        
+        .step {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--bg-secondary);
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-content p {
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        
+        /* 视频教程 */
+        .video-tutorials {
+            margin-top: var(--spacing-xl);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            height: 0;
+            overflow: hidden;
+            margin-bottom: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .learning-center-container {
+                flex-direction: column;
+            }
+            
+            .learning-nav {
+                width: 100%;
+                position: static;
+                max-height: none;
+                margin-bottom: var(--spacing-md);
+            }
+            
+            .tutorial-cards {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        /* 增强开始学习按钮样式 */
+        .btn.btn-primary {
+            background-color: #2176FF !important; /* 更深的蓝色 */
+            color: white !important;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .btn.btn-primary:hover {
+            background-color: #1055CC !important; /* 悬停时更深的颜色 */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 平滑滚动行为 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 目标元素激活样式 */
+        .technique-title:target {
+            animation: highlight 2s ease-out;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(255, 149, 5, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        /* 选项卡导航样式 */
+        .tabs-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background-color: var(--bg-secondary);
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            z-index: -1;
+            transition: transform 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tab-btn:hover::before {
+            transform: translateY(100%);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #1e40af 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(33, 118, 255, 0.3);
+        }
+        
+        /* 为每个按钮添加不同的强调色 */
+        .tab-btn[data-tab="beginner"] {
+            border-bottom: 3px solid #3b82f6;
+        }
+        
+        .tab-btn[data-tab="basic"] {
+            border-bottom: 3px solid #10b981;
+        }
+        
+        .tab-btn[data-tab="intermediate"] {
+            border-bottom: 3px solid #f59e0b;
+        }
+        
+        .tab-btn[data-tab="advanced"] {
+            border-bottom: 3px solid #ef4444;
+        }
+        
+        .tab-btn.active[data-tab="beginner"] {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+        
+        .tab-btn.active[data-tab="basic"] {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+        }
+        
+        .tab-btn.active[data-tab="intermediate"] {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .tab-btn.active[data-tab="advanced"] {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+        }
+        
+        /* 选项卡内容样式 */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tab-title {
+            font-size: 2.2rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+            position: relative;
+            padding-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .tab-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-color), #1e40af);
+            border-radius: 3px;
+        }
+        
+        .tab-description {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-lg);
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            position: relative;
+            padding-bottom: var(--spacing-md);
+        }
+        
+        .tab-description::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+        }
+        
+        /* 修改卡片样式 */
+        .tutorial-card.full-width {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            margin-bottom: var(--spacing-lg);
+            max-height: 220px;
+        }
+        
+        .tutorial-card.full-width .tutorial-image {
+            width: 30%;
+            height: auto;
+        }
+        
+        .tutorial-card.full-width .tutorial-content {
+            width: 70%;
+            text-align: left;
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+        
+        @media (max-width: 768px) {
+            .tutorial-card.full-width {
+                flex-direction: column;
+                max-height: none;
+            }
+            
+            .tutorial-card.full-width .tutorial-image,
+            .tutorial-card.full-width .tutorial-content {
+                width: 100%;
+            }
+        }
+        
+        /* 选项卡按钮样式 */
+        .tab-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 15px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 18px;
+            background-color: #f8f9fa;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+        
+        .tab-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tab-btn:hover:before {
+            opacity: 1;
+        }
+        
+        .tab-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-btn.active {
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 为四个不同选项卡按钮设置不同颜色 */
+        .tab-btn[data-tab="beginner"] {
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .tab-btn[data-tab="beginner"].active {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+        }
+        
+        .tab-btn[data-tab="basic"] {
+            border-left: 4px solid #2196F3;
+        }
+        
+        .tab-btn[data-tab="basic"].active {
+            background: linear-gradient(to right, #2196F3, #0b7dda);
+        }
+        
+        .tab-btn[data-tab="intermediate"] {
+            border-left: 4px solid #FF9800;
+        }
+        
+        .tab-btn[data-tab="intermediate"].active {
+            background: linear-gradient(to right, #FF9800, #e68a00);
+        }
+        
+        .tab-btn[data-tab="advanced"] {
+            border-left: 4px solid #E91E63;
+        }
+        
+        .tab-btn[data-tab="advanced"].active {
+            background: linear-gradient(to right, #E91E63, #d11556);
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">学习中心 - 掌握数独技巧</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="daily-challenge.html">每日挑战</a>
+                    <a href="classic-mode.html">经典模式</a>
+                    <a href="#" class="active">学习中心</a>
+                    <a href="recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="container">
+        <div class="learning-center-container">
+            <!-- 学习内容区 -->
+            <div class="learning-content">
+                <!-- 选项卡导航 -->
+                <div class="tabs-navigation">
+                    <button class="tab-btn active" data-tab="beginner">入门教程</button>
+                    <button class="tab-btn" data-tab="basic">初级技巧</button>
+                    <button class="tab-btn" data-tab="intermediate">中级技巧</button>
+                    <button class="tab-btn" data-tab="advanced">高级技巧</button>
+                </div>
+                
+                <h2 class="section-title" id="what-is-sudoku">数独技巧教程</h2>
+                
+                <!-- 入门教程选项卡 -->
+                <div class="tab-content active" id="beginner-content">
+                    <h3 class="tab-title">数独入门教程</h3>
+                    <p class="tab-description">从零开始了解数独规则和基本概念，适合首次接触数独的玩家。通过简单易懂的图文解析，快速掌握游戏基础。</p>
+                    
+                    <!-- 入门教程卡片 -->
+                    <div class="tutorial-card full-width">
+                        <div class="tutorial-image">
+                            <img src="../images/数独入门教程.png" alt="数独入门">
+                        </div>
+                        <div class="tutorial-content">
+                            <span class="difficulty-label difficulty-beginner">入门</span>
+                            <h3 class="tutorial-title">数独规则与基础</h3>
+                            <p class="tutorial-desc">了解数独的基本规则和游戏历史，为深入学习奠定基础。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 数独规则图文说明 -->
+                    <div class="demonstration-area">
+                        <h3 class="demo-title" id="sudoku-rules">数独规则图文说明</h3>
+                        <div class="technique-desc">
+                            <p>数独的基本规则非常简单：每一行、每一列以及每个3x3的宫格内必须包含数字1到9，且不能重复。</p>
+                        </div>
+                        <div class="example-grid">
+                            <img src="../images/数独规则详解.png" alt="数独规则图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p><strong>行规则</strong>：每一行必须包含1-9的数字，不能重复。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p><strong>列规则</strong>：每一列必须包含1-9的数字，不能重复。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p><strong>宫规则</strong>：每个3x3宫格必须包含1-9的数字，不能重复。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <p>解题过程中，需要依据上述三个规则，逐步确定每个单元格的数值。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 数独入门基础 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title">数独入门基础</h3>
+                        <p class="technique-desc">
+                            数独游戏虽然看似复杂，但掌握了基本技巧后，解题会变得轻松有趣。
+                            初学者可以从简单难度开始，通过实践逐步提升解题能力。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/数独入门基础.png" alt="数独入门图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>先找出那些只有一个可能解的单元格，也就是应用唯一候选数法。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>使用扫描法寻找行、列或宫中只能放置特定数字的位置。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>反复应用这些基础技巧，直到无法继续前进或完成解题。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 初级技巧选项卡 -->
+                <div class="tab-content" id="basic-content">
+                    <h3 class="tab-title">初级解题技巧</h3>
+                    <p class="tab-description">掌握数独基础解题方法，轻松应对简单到中等难度的数独题目。这些技巧是解决大多数数独谜题的关键基础。</p>
+                    
+                    <!-- 初级教程卡片 -->
+                    <div class="tutorial-card full-width">
+                        <div class="tutorial-image">
+                            <img src="../images/基础解题技巧.png" alt="基础技巧">
+                        </div>
+                        <div class="tutorial-content">
+                            <span class="difficulty-label difficulty-beginner">基础</span>
+                            <h3 class="tutorial-title">基础解题技巧</h3>
+                            <p class="tutorial-desc">掌握唯一候选数法、候选数删减法等基础技巧，解决简单到中等难度的数独。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 扫描法 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="scanning-method">扫描法</h3>
+                        <p class="technique-desc">
+                            扫描法是最基础的数独解题技巧，通过行、列、宫的交叉扫描来确定唯一可能的数字位置。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/扫描法图解.png" alt="扫描法图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>选择一个数字（比如数字1），从第一行开始扫描，找出此行可能放置该数字的所有位置。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>继续扫描相关的列和宫，排除不可能的位置。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>如果最终只剩下一个可能的位置，那么该数字就确定在此位置。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <p>对所有数字（1-9）和所有行、列、宫重复此过程。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 唯一候选数法 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="sole-candidate">唯一候选数法</h3>
+                        <p class="technique-desc">
+                            当一个单元格只有一个可能的数字时，该数字必然填入此单元格，这就是唯一候选数法。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/唯一候选数法.png" alt="唯一候选数法图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>确定每个空格的所有候选数（根据行、列、宫规则排除已有数字）。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>找出只有一个候选数的单元格。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>填入该候选数，并更新相关单元格的候选数列表。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 候选数删减法 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="candidate-elimination">候选数删减法</h3>
+                        <p class="technique-desc">
+                            通过行、列、宫的规则，删除不可能的候选数，从而简化解题过程。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/候选数删减法.png" alt="候选数删减法图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>为每个空格标记所有可能的候选数（1-9中符合规则的数字）。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>当某个单元格确定一个数字后，从同行、同列、同宫的其他单元格中删除该数字的候选标记。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>不断重复此过程，直到某些单元格的候选数减少为1，从而确定该单元格的数字。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 宫内摒除法 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="block-elimination">宫内摒除法</h3>
+                        <p class="technique-desc">
+                            当某个数字在一个3×3宫内只能出现在特定的行或列中时，可以排除该行或列在其他宫中的相同候选数。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/宫内摒除法.png" alt="宫内摒除法图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>分析某个3×3宫内特定数字的可能位置。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>如果该数字只能出现在宫内的某一行（或列）中，则该行（或列）的其他宫中不可能出现此数字。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>删除该行（或列）其他宫中的对应候选数。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 中级技巧选项卡 -->
+                <div class="tab-content" id="intermediate-content">
+                    <h3 class="tab-title">中级解题技巧</h3>
+                    <p class="tab-description">学习更进阶的数独解题策略，突破困难级别的数独谜题瓶颈。这些技巧能帮助你解决大部分困难级数独。</p>
+                    
+                    <!-- 中级教程卡片 -->
+                    <div class="tutorial-card full-width">
+                        <div class="tutorial-image">
+                            <img src="../images/中级解题技巧.png" alt="中级技巧">
+                        </div>
+                        <div class="tutorial-content">
+                            <span class="difficulty-label difficulty-intermediate">中级</span>
+                            <h3 class="tutorial-title">中级解题策略</h3>
+                            <p class="tutorial-desc">学习明暗对子法、X-Wing等中级技巧，突破困难级别的数独谜题。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 明暗对子法 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="pairs-technique">明暗对子法图解</h3>
+                        <p class="technique-desc">
+                            对子法是中级数独解题的重要技巧，分为明对子(Naked Pairs)和暗对子(Hidden Pairs)。
+                            当掌握了这些技巧后，可以大幅提升解决中等难度数独的能力。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/明暗对子法图解.png" alt="对子法图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p id="naked-pairs"><strong>明对子</strong>：当同一行、列或宫中有两个单元格的候选数完全相同且只有两个时，这两个候选数只能出现在这两个单元格中，可以从同一行、列或宫的其他单元格中删除这两个候选数。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p id="hidden-pairs"><strong>暗对子</strong>：当同一行、列或宫中有两个候选数只出现在两个单元格中时（这两个单元格可能还有其他候选数），这两个单元格中的其他候选数可以被删除。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- X-Wing技巧 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="x-wing">X-Wing技巧图解</h3>
+                        <p class="technique-desc">
+                            X-Wing是一种强大的高级解题技巧，适用于中高难度的数独谜题。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/X-Wing技巧图解.png" alt="X-Wing技巧图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>当某个数字在两行中各自仅出现在相同的两列位置上时，形成一个矩形（如同字母X）。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>此时，这两列的其他行中可以排除该数字作为候选数。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>同理，当某个数字在两列中各自仅出现在相同的两行位置上时，这两行的其他列中可以排除该数字。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 高级技巧选项卡 -->
+                <div class="tab-content" id="advanced-content">
+                    <h3 class="tab-title">高级解题技巧</h3>
+                    <p class="tab-description">探索最复杂的数独解题技巧，挑战专家级数独谜题。掌握这些方法后，几乎没有你解不开的数独难题。</p>
+                    
+                    <!-- 高级教程卡片 -->
+                    <div class="tutorial-card full-width">
+                        <div class="tutorial-image">
+                            <img src="../images/高级解题技巧.png" alt="高级技巧">
+                        </div>
+                        <div class="tutorial-content">
+                            <span class="difficulty-label difficulty-advanced">高级</span>
+                            <h3 class="tutorial-title">高级解题技巧</h3>
+                            <p class="tutorial-desc">探索XY-Wing、Swordfish等高级技巧，挑战专家级数独谜题。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- XY-Wing技巧 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="xy-wing">XY-Wing技巧图解</h3>
+                        <p class="technique-desc">
+                            XY-Wing是一种高级解题技巧，对于解决困难和专家级数独非常有效。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/XY-Wing技巧图解.png" alt="XY-Wing技巧图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>寻找一个只有两个候选数（XY）的单元格作为"枢纽"。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>找到两个与枢纽相关（同行、同列或同宫）的单元格，它们分别有两个候选数（XZ和YZ），并且它们都包含一个与枢纽相同的候选数和另一个共同的候选数Z。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>这三个单元格形成"Y"形状，此时可以从能同时看到后两个单元格的所有单元格中删除候选数Z。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Swordfish技巧 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="swordfish">Swordfish技巧图解</h3>
+                        <p class="technique-desc">
+                            Swordfish技巧是X-Wing的扩展版本，涉及三行三列的交叉模式。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/Swordfish技巧.png" alt="Swordfish技巧图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>寻找三行中某个数字的候选位置仅限于三列之内。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>这形成一个3×3的矩阵（最多有9个单元格，但实际的候选位置可能少于9个）。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>此时，可以从这三列中、不属于这三行的其他单元格中删除该数字的候选标记。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <p>同理，当三列中某个数字的候选位置仅限于三行之内，可以从这三行中、不属于这三列的其他单元格中删除该数字。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 着色法 -->
+                    <div class="technique-section">
+                        <h3 class="technique-title" id="coloring">着色法图解</h3>
+                        <p class="technique-desc">
+                            着色法（Coloring）是一种强大的可视化技巧，通过标记互相关联的候选数来找出矛盾或确定解。
+                        </p>
+                        <div class="example-grid">
+                            <img src="../images/着色法.png" alt="着色法图解" width="100%">
+                        </div>
+                        <div class="step-by-step">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p>找出某个数字的所有候选位置，将相互关联（同行、列或宫）的候选位置用两种颜色交替标记。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p>如果同一颜色的两个标记出现在互相关联的位置，则出现矛盾，表明该颜色标记的所有位置都不可能是该数字。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p>如果能确定一个颜色标记的位置不正确，则另一种颜色标记的所有位置必定正确。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <p>当某个位置可以同时看到两种颜色标记，则该位置可以删除此数字的候选标记。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 页面底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="quote-carousel">
+                <p>"知之者不如好之者，好之者不如乐之者。" —— 孔子</p>
+            </div>
+            
+            <div class="quick-links">
+                <a href="daily-challenge.html">今日挑战</a>
+                <a href="recommended-books.html">名著推荐</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 引入JavaScript文件 -->
+    <script src="../js/learning-center.js"></script>
+    
+    <!-- 选项卡切换功能 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有的选项卡按钮和内容
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // 为每个选项卡按钮添加点击事件
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 获取当前点击的选项卡的数据标签
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 移除所有选项卡按钮的active类
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // 移除所有选项卡内容的active类
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 为当前点击的按钮添加active类
+                    this.classList.add('active');
+                    // 为对应的内容添加active类
+                    document.getElementById(tabId + '-content').classList.add('active');
+                });
+            });
+            
+            // URL锚点跳转处理
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const targetElement = document.getElementById(hash);
+                
+                if (targetElement) {
+                    // 找到锚点所在的选项卡内容
+                    const parentTab = findParentTab(targetElement);
+                    
+                    if (parentTab) {
+                        // 获取对应的选项卡按钮
+                        const tabId = parentTab.id.replace('-content', '');
+                        const tabButton = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+                        
+                        // 激活对应的选项卡
+                        if (tabButton) {
+                            // 触发点击事件
+                            tabButton.click();
+                        }
+                    }
+                }
+            }
+            
+            // 查找元素所在的选项卡内容
+            function findParentTab(element) {
+                let current = element;
+                
+                while (current && !current.classList.contains('tab-content')) {
+                    current = current.parentElement;
+                }
+                
+                return current;
+            }
+        });
+    </script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="../css/floating-ball.css">
+    <script src="../js/floating-ball.js"></script>
+</body>
+</html> 

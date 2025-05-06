@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数独的历史 - 数独学堂</title>
+    <meta name="description" content="探索数独游戏的起源与发展历程，了解这个风靡全球的数字游戏如何从古老的拉丁方阵演变为现代流行的智力挑战。">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 历史页面特定样式 -->
+    <style>
+        /* 时间线组件 */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: var(--bg-primary);
+            border: 4px solid var(--accent-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .timeline-left {
+            left: 0;
+        }
+        
+        .timeline-right {
+            left: 50%;
+        }
+        
+        .timeline-left::after {
+            right: -12px;
+        }
+        
+        .timeline-right::after {
+            left: -12px;
+        }
+        
+        .timeline-content {
+            padding: var(--spacing-md);
+            background-color: var(--bg-card);
+            position: relative;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            border-width: 10px;
+            border-style: solid;
+            top: 15px;
+        }
+        
+        .timeline-left .timeline-content::after {
+            border-color: transparent var(--bg-card) transparent transparent;
+            right: 100%;
+        }
+        
+        .timeline-right .timeline-content::after {
+            border-color: transparent transparent transparent var(--bg-card);
+            left: 100%;
+        }
+        
+        .timeline-year {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--accent-color);
+        }
+        
+        .timeline-title {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .timeline-text {
+            color: var(--text-secondary);
+        }
+        
+        .timeline-image {
+            width: 100%;
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-sm) 0;
+        }
+        
+        /* 引言部分 */
+        .intro-section {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--spacing-xl);
+        }
+        
+        .intro-title {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .intro-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        /* 引用卡片 */
+        .quote-card {
+            background-color: var(--bg-card);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            margin: var(--spacing-xl) auto;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .quote-card::before {
+            content: '\201C';
+            font-family: Georgia, serif;
+            font-size: 5rem;
+            position: absolute;
+            left: 10px;
+            top: -20px;
+            color: var(--accent-color);
+            opacity: 0.3;
+        }
+        
+        .quote-text {
+            font-style: italic;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .quote-author {
+            text-align: right;
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+        
+        /* 数独起源地图 */
+        .origin-map {
+            margin: var(--spacing-xl) auto;
+            text-align: center;
+        }
+        
+        .map-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .map-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .map-image {
+            width: 100%;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .map-marker:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.5);
+        }
+        
+        .map-marker::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .map-tooltip {
+            position: absolute;
+            background-color: var(--bg-card);
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-md);
+            width: 200px;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .map-marker:hover + .map-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 历史图库 */
+        .gallery-section {
+            margin: var(--spacing-xl) auto;
+        }
+        
+        .gallery-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            aspect-ratio: 4/3;
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.05);
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: var(--spacing-sm);
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+        
+        /* 关键人物卡片 */
+        .key-figures {
+            margin: var(--spacing-xl) auto;
+        }
+        
+        .figures-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .figures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .figure-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .figure-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .figure-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+        
+        .figure-info {
+            padding: var(--spacing-md);
+        }
+        
+        .figure-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+        
+        .figure-role {
+            color: var(--accent-color);
+            margin-bottom: var(--spacing-sm);
+            font-style: italic;
+        }
+        
+        .figure-bio {
+            color: var(--text-secondary);
+        }
+        
+        /* 响应式设计 */
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-right {
+                left: 0%;
+            }
+            
+            .timeline-left::after, .timeline-right::after {
+                left: 15px;
+            }
+            
+            .timeline-left .timeline-content::after {
+                border-color: transparent transparent transparent var(--bg-card);
+                left: 100%;
+                right: auto;
+            }
+            
+            .timeline-right .timeline-content::after {
+                border-color: transparent transparent transparent var(--bg-card);
+                left: 100%;
+            }
+            
+            .figures-grid, .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">数独发展史 - 从起源到现代</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="daily-challenge.html">每日挑战</a>
+                    <a href="classic-mode.html">经典模式</a>
+                    <a href="learning-mode.html">学习模式</a>
+                    <a href="learning-center.html">学习中心</a>
+                    <a href="recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 引言部分 -->
+        <section class="intro-section">
+            <h1 class="intro-title">数独：从古老谜题到全球文化现象</h1>
+            <p class="intro-text">
+                数独看似简单，却蕴含着无限的数学魅力和思维挑战。这个风靡全球的智力游戏从何而来？
+                它如何从古老的数学问题演变为今天人人都能享受的休闲活动？
+                让我们一起追溯数独的起源，探索它在不同时期、不同文化中的演变历程。
+            </p>
+        </section>
+        
+        <!-- 引用卡片 -->
+        <div class="quote-card">
+            <p class="quote-text">
+                "数独不仅仅是一个游戏，它是一种思维方式的训练，是逻辑与秩序在方寸之间的完美展现。每当我解开一个数独谜题，那种成就感就像是找到了宇宙中的一小块真理。"
+            </p>
+            <p class="quote-author">— 威尔·肖茨 (Will Shortz)，《纽约时报》谜题编辑</p>
+        </div>
+        
+        <!-- 时间线部分 -->
+        <div class="timeline">
+            <!-- 时间节点1 -->
+            <div class="timeline-item timeline-left">
+                <div class="timeline-content">
+                    <div class="timeline-year">古代</div>
+                    <h3 class="timeline-title">拉丁方阵：数独的前身</h3>
+                    <p class="timeline-text">
+                        数独的理论基础可以追溯到18世纪的"拉丁方阵"(Latin Square)，这是由瑞士数学家莱昂哈德·欧拉(Leonhard Euler)在1783年发明的。
+                        拉丁方阵要求在一个n×n方格中，每行每列都恰好包含数字1到n，每个数字在每行每列中只出现一次。
+                        这一基本规则正是现代数独的核心原则。
+                    </p>
+                    <img src="https://via.placeholder.com/600x400?text=拉丁方阵示例" alt="拉丁方阵示例" class="timeline-image">
+                </div>
+            </div>
+            
+            <!-- 时间节点2 -->
+            <div class="timeline-item timeline-right">
+                <div class="timeline-content">
+                    <div class="timeline-year">1979年</div>
+                    <h3 class="timeline-title">现代数独的诞生</h3>
+                    <p class="timeline-text">
+                        现代数独游戏最初出现在1979年的美国《戴尔谜题杂志》(Dell Pencil Puzzles and Word Games)上，当时被称为"Number Place"（数字放置）。
+                        这一早期版本已经包含了9×9的网格和3×3的宫格划分，以及现代数独的基本规则。
+                        由霍华德·加恩斯(Howard Garns)设计，他是一位自由职业的谜题设计师和建筑师。
+                    </p>
+                    <img src="https://via.placeholder.com/600x400?text=早期数独谜题" alt="早期数独谜题" class="timeline-image">
+                </div>
+            </div>
+            
+            <!-- 时间节点3 -->
+            <div class="timeline-item timeline-left">
+                <div class="timeline-content">
+                    <div class="timeline-year">1984年</div>
+                    <h3 class="timeline-title">数独传入日本</h3>
+                    <p class="timeline-text">
+                        1984年，日本谜题公司Nikoli的社长角田改编了这种谜题，并将其命名为"数独"（Sudoku），意为"数字只能出现一次"。
+                        Nikoli对游戏规则做了一些改进，如要求谜题必须具有对称性，以及限制已给出数字的数量等。
+                        这些改变使得数独在日本迅速流行，成为报纸和杂志中的常见谜题。
+                    </p>
+                    <img src="https://via.placeholder.com/600x400?text=日本数独" alt="日本数独" class="timeline-image">
+                </div>
+            </div>
+            
+            <!-- 时间节点4 -->
+            <div class="timeline-item timeline-right">
+                <div class="timeline-content">
+                    <div class="timeline-year">1997年</div>
+                    <h3 class="timeline-title">数独的国际化</h3>
+                    <p class="timeline-text">
+                        1997年，退休的新西兰法官韦恩·古尔德(Wayne Gould)在东京的一家书店偶然发现了数独谜题，随后他花了六年时间开发了一个能够生成数独的电脑程序。
+                        2004年，他说服《泰晤士报》每日刊登数独，这一举动使数独开始在英国流行。紧随其后，美国和其他欧洲国家的主要报纸也开始刊登数独谜题。
+                    </p>
+                    <img src="https://via.placeholder.com/600x400?text=国际版数独" alt="国际版数独" class="timeline-image">
+                </div>
+            </div>
+            
+            <!-- 时间节点5 -->
+            <div class="timeline-item timeline-left">
+                <div class="timeline-content">
+                    <div class="timeline-year">2005年</div>
+                    <h3 class="timeline-title">数独热潮</h3>
+                    <p class="timeline-text">
+                        2005年被称为"数独年"，数独在全球范围内爆发性流行。大量数独书籍、杂志和电子游戏涌现，数独成为报纸上仅次于填字游戏的第二大智力谜题。
+                        同年，意大利举办了首届世界数独锦标赛，来自世界各地的数独爱好者聚集一堂，展开竞技。从此，世界数独锦标赛成为年度盛事。
+                    </p>
+                    <img src="https://via.placeholder.com/600x400?text=世界数独锦标赛" alt="世界数独锦标赛" class="timeline-image">
+                </div>
+            </div>
+            
+            <!-- 时间节点6 -->
+            <div class="timeline-item timeline-right">
+                <div class="timeline-content">
+                    <div class="timeline-year">2006年至今</div>
+                    <h3 class="timeline-title">数独的数字化发展</h3>
+                    <p class="timeline-text">
+                        随着智能手机和平板电脑的普及，数独游戏迅速适应数字时代。各种数独应用程序层出不穷，从传统9×9数独到各种变种（如杀手数独、数独X等）都能在移动设备上轻松享受。
+                        数独算法的研究也取得了长足进展，包括高效的解题算法、难度评估系统以及自动生成谜题等领域。
+                    </p>
+                    <img src="https://via.placeholder.com/600x400?text=数字时代的数独" alt="数字时代的数独" class="timeline-image">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数独起源地图 -->
+        <section class="origin-map">
+            <h2 class="map-title">数独的全球旅程</h2>
+            <div class="map-container">
+                <img src="https://via.placeholder.com/800x500?text=世界地图" alt="世界地图" class="map-image">
+                
+                <!-- 瑞士标记点 -->
+                <div class="map-marker" style="top: 30%; left: 48%;" data-country="switzerland"></div>
+                <div class="map-tooltip" style="top: 28%; left: 48%;">
+                    <strong>瑞士</strong>：1783年欧拉发明拉丁方阵，为数独奠定理论基础。
+                </div>
+                
+                <!-- 美国标记点 -->
+                <div class="map-marker" style="top: 35%; left: 25%;" data-country="usa"></div>
+                <div class="map-tooltip" style="top: 33%; left: 25%;">
+                    <strong>美国</strong>：1979年霍华德·加恩斯在《戴尔谜题杂志》上首次发表数独谜题。
+                </div>
+                
+                <!-- 日本标记点 -->
+                <div class="map-marker" style="top: 35%; left: 80%;" data-country="japan"></div>
+                <div class="map-tooltip" style="top: 33%; left: 80%;">
+                    <strong>日本</strong>：1984年Nikoli公司将其命名为"数独"并加以改良，使其在日本流行。
+                </div>
+                
+                <!-- 英国标记点 -->
+                <div class="map-marker" style="top: 25%; left: 45%;" data-country="uk"></div>
+                <div class="map-tooltip" style="top: 23%; left: 45%;">
+                    <strong>英国</strong>：2004年《泰晤士报》开始每日刊登数独，使其在欧洲流行。
+                </div>
+                
+                <!-- 中国标记点 -->
+                <div class="map-marker" style="top: 40%; left: 75%;" data-country="china"></div>
+                <div class="map-tooltip" style="top: 38%; left: 75%;">
+                    <strong>中国</strong>：数独在21世纪初传入中国，迅速成为报纸和杂志中的热门谜题。
+                </div>
+            </div>
+        </section>
+        
+        <!-- 关键人物 -->
+        <section class="key-figures">
+            <h2 class="figures-title">数独发展中的关键人物</h2>
+            <div class="figures-grid">
+                <!-- 人物1 -->
+                <div class="figure-card">
+                    <img src="https://via.placeholder.com/300x300?text=莱昂哈德·欧拉" alt="莱昂哈德·欧拉" class="figure-image">
+                    <div class="figure-info">
+                        <h3 class="figure-name">莱昂哈德·欧拉</h3>
+                        <p class="figure-role">数学家，拉丁方阵的发明者</p>
+                        <p class="figure-bio">18世纪著名瑞士数学家，拉丁方阵的发明者，虽然他并未直接创造数独，但他的工作为数独的数学基础奠定了理论基础。</p>
+                    </div>
+                </div>
+                
+                <!-- 人物2 -->
+                <div class="figure-card">
+                    <img src="https://via.placeholder.com/300x300?text=霍华德·加恩斯" alt="霍华德·加恩斯" class="figure-image">
+                    <div class="figure-info">
+                        <h3 class="figure-name">霍华德·加恩斯</h3>
+                        <p class="figure-role">谜题设计师，现代数独创造者</p>
+                        <p class="figure-bio">美国建筑师和谜题设计师，被认为是最早创造现代数独（当时称为Number Place）的人。他的作品于1979年首次出现在《戴尔谜题杂志》上。</p>
+                    </div>
+                </div>
+                
+                <!-- 人物3 -->
+                <div class="figure-card">
+                    <img src="https://via.placeholder.com/300x300?text=角田真之" alt="角田真之" class="figure-image">
+                    <div class="figure-info">
+                        <h3 class="figure-name">角田真之</h3>
+                        <p class="figure-role">Nikoli公司创始人，数独命名者</p>
+                        <p class="figure-bio">日本谜题杂志Nikoli的创始人，将从美国引入的"Number Place"重新命名为"数独"，并制定了数独应当遵循的质量标准，使其在日本广泛流行。</p>
+                    </div>
+                </div>
+                
+                <!-- 人物4 -->
+                <div class="figure-card">
+                    <img src="https://via.placeholder.com/300x300?text=韦恩·古尔德" alt="韦恩·古尔德" class="figure-image">
+                    <div class="figure-info">
+                        <h3 class="figure-name">韦恩·古尔德</h3>
+                        <p class="figure-role">数独传播者，软件开发者</p>
+                        <p class="figure-bio">新西兰退休法官，在日本偶然发现数独后，开发了生成数独的计算机程序，并说服《泰晤士报》每日刊登数独，在全球范围内推广了这一游戏。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 历史图库 -->
+        <section class="gallery-section">
+            <h2 class="gallery-title">数独历史图片集</h2>
+            <div class="gallery-grid">
+                <!-- 图片1 -->
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x300?text=古老的拉丁方阵" alt="古老的拉丁方阵" class="gallery-image">
+                    <div class="gallery-caption">
+                        欧拉在1783年发表的拉丁方阵原始手稿
+                    </div>
+                </div>
+                
+                <!-- 图片2 -->
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x300?text=首个Number Place" alt="首个Number Place" class="gallery-image">
+                    <div class="gallery-caption">
+                        1979年《戴尔谜题杂志》上的第一个Number Place谜题
+                    </div>
+                </div>
+                
+                <!-- 图片3 -->
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x300?text=日本数独杂志" alt="日本数独杂志" class="gallery-image">
+                    <div class="gallery-caption">
+                        日本Nikoli公司1984年出版的数独杂志封面
+                    </div>
+                </div>
+                
+                <!-- 图片4 -->
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x300?text=泰晤士报数独" alt="泰晤士报数独" class="gallery-image">
+                    <div class="gallery-caption">
+                        2004年《泰晤士报》上刊登的第一个数独谜题
+                    </div>
+                </div>
+                
+                <!-- 图片5 -->
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x300?text=数独世锦赛" alt="数独世锦赛" class="gallery-image">
+                    <div class="gallery-caption">
+                        2005年首届世界数独锦标赛现场
+                    </div>
+                </div>
+                
+                <!-- 图片6 -->
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x300?text=数独游戏app" alt="数独游戏app" class="gallery-image">
+                    <div class="gallery-caption">
+                        现代数独手机应用程序界面
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 结语部分 -->
+        <div class="quote-card">
+            <p class="quote-text">
+                "数独从古老的数学原理到现代全球文化现象，见证了人类对逻辑思维和谜题解决的永恒追求。在这个快节奏的数字时代，数独提供了一个静思冥想的空间，让我们重新发现秩序和规律的美。"
+            </p>
+            <p class="quote-author">— 数独学堂</p>
+        </div>
+    </main>
+    
+    <!-- 页面底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="quote-carousel">
+                <p>"理解历史，才能更好地把握未来。"</p>
+            </div>
+            
+            <div class="quick-links">
+                <a href="daily-challenge.html">今日挑战</a>
+                <a href="learning-center.html">学习中心</a>
+                <a href="recommended-books.html">名著推荐</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 引入JavaScript文件 -->
+    <script src="../js/history.js"></script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="../css/floating-ball.css">
+    <script src="../js/floating-ball.js"></script>
+</body>
+</html> 

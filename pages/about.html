@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于数独学堂 - 我们的理念与目标</title>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入字体图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 页面专用样式 -->
+    <style>
+        /* 关于页面专用样式 */
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .page-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            position: relative;
+        }
+        
+        .page-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+        
+        .about-section {
+            margin-bottom: 3rem;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 1px solid var(--neutral-200);
+            padding-bottom: 0.8rem;
+        }
+        
+        .section-content {
+            line-height: 1.7;
+            color: var(--text-color);
+        }
+        
+        .section-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--neutral-800);
+        }
+        
+        .feature-desc {
+            color: var(--text-light);
+        }
+        
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            text-align: center;
+            width: 200px;
+        }
+        
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            object-fit: cover;
+            border: 3px solid var(--primary-light);
+        }
+        
+        .member-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-role {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-bio {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .testimonials {
+            margin-top: 2rem;
+        }
+        
+        .testimonial {
+            background-color: var(--bg-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            display: block;
+            text-align: right;
+        }
+        
+        .milestones {
+            margin-top: 2rem;
+            position: relative;
+        }
+        
+        .milestone {
+            margin-bottom: 2rem;
+            padding-left: 3rem;
+            position: relative;
+        }
+        
+        .milestone::before {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: var(--primary-light);
+        }
+        
+        .milestone:last-child::before {
+            height: 50%;
+        }
+        
+        .milestone-dot {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        
+        .milestone-date {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .milestone-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .milestone-desc {
+            color: var(--text-light);
+        }
+        
+        .contact-form {
+            margin-top: 2rem;
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            padding: 0.8rem;
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--border-radius);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-members {
+                gap: 1.5rem;
+            }
+            
+            .milestone {
+                padding-left: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">关于我们 - 数独学堂的故事</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="daily-challenge.html">每日挑战</a>
+                    <a href="classic-mode.html">经典模式</a>
+                    <a href="learning-mode.html">学习模式</a>
+                    <a href="learning-center.html">学习中心</a>
+                    <a href="recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main>
+        <div class="about-container">
+            <h1 class="page-title">关于数独学堂</h1>
+            
+            <!-- 平台简介 -->
+            <section class="about-section">
+                <h2 class="section-title">平台简介</h2>
+                <div class="section-content">
+                    <p>数独学堂是一个专注于数独游戏学习与解题训练的中文平台，致力于为数独爱好者提供高质量的游戏体验、学习资源和交流社区。无论您是数独初学者还是已经掌握高级解题技巧的专家，我们都能为您提供适合的内容和挑战。</p>
+                    <p>我们相信数独不仅是一种休闲游戏，更是一种锻炼逻辑思维和专注力的绝佳方式。通过持续练习数独，您可以提升问题解决能力、注意力和耐心，这些技能在日常生活和工作中都非常有价值。</p>
+                    <p>数独学堂的使命是让数独游戏变得更加有趣、易学且富有挑战性，同时建立一个活跃的数独爱好者社区，促进经验分享和技巧交流。</p>
+                </div>
+            </section>
+            
+            <!-- 平台特色 -->
+            <section class="about-section">
+                <h2 class="section-title">平台特色</h2>
+                <div class="section-content">
+                    <p>数独学堂精心设计了多种功能模块，满足不同级别玩家的需求：</p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-th"></i>
+                            </div>
+                            <h3 class="feature-title">经典模式</h3>
+                            <p class="feature-desc">提供海量数独题库，四种难度级别（简单、中等、困难、专家）满足不同水平玩家需求，随时随地享受纯粹的数独乐趣。</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <h3 class="feature-title">每日挑战</h3>
+                            <p class="feature-desc">每天更新一道精选数独题目，限时挑战自我，连续打卡获取成就勋章，与全球玩家比拼解题速度。</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3 class="feature-title">学习模式</h3>
+                            <p class="feature-desc">带有解题提示和技巧指导的练习模式，帮助初学者掌握基本技巧，提高解题速度，循序渐进提升能力。</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h3 class="feature-title">学习中心</h3>
+                            <p class="feature-desc">丰富的文字和视频教程，系统介绍数独解题技巧，从基础到高级技巧一应俱全，助您成为数独大师。</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h3 class="feature-title">成就系统</h3>
+                            <p class="feature-desc">完成特定任务解锁成就勋章，记录个人进步历程，设定目标激励持续练习，享受成长的喜悦。</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <h3 class="feature-title">主题切换</h3>
+                            <p class="feature-desc">支持明暗两种主题模式，保护视力的同时提供舒适的游戏体验，根据个人喜好和环境自由切换。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 团队介绍 -->
+            <section class="about-section">
+                <h2 class="section-title">团队介绍</h2>
+                <div class="section-content">
+                    <p>数独学堂由一群热爱数独游戏的开发者和解题爱好者共同创建。我们的团队成员来自不同背景，但都有着共同的目标：创造最好的数独学习和游戏平台。</p>
+                    
+                    <div class="team-members">
+                        <div class="team-member">
+                            <img src="../images/avatar-placeholder.png" alt="张明" class="member-avatar">
+                            <h3 class="member-name">张明</h3>
+                            <p class="member-role">创始人 & 首席开发者</p>
+                            <p class="member-bio">资深全栈开发者，数独国家级比赛冠军，致力于将技术与数独游戏完美结合。</p>
+                        </div>
+                        
+                        <div class="team-member">
+                            <img src="../images/avatar-placeholder.png" alt="李华" class="member-avatar">
+                            <h3 class="member-name">李华</h3>
+                            <p class="member-role">数独算法专家</p>
+                            <p class="member-bio">计算机科学博士，专注于数独生成算法研究，确保平台提供高质量、唯一解的数独题目。</p>
+                        </div>
+                        
+                        <div class="team-member">
+                            <img src="../images/avatar-placeholder.png" alt="王芳" class="member-avatar">
+                            <h3 class="member-name">王芳</h3>
+                            <p class="member-role">教育内容总监</p>
+                            <p class="member-bio">前数学教师，负责平台学习资源开发，专注于使数独学习变得简单有趣。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 用户评价 -->
+            <section class="about-section">
+                <h2 class="section-title">用户评价</h2>
+                <div class="section-content">
+                    <p>我们的平台获得了众多用户的好评：</p>
+                    
+                    <div class="testimonials">
+                        <div class="testimonial">
+                            <p class="testimonial-content">"数独学堂是我见过的最好用的数独应用，题目质量高，难度分级合理，学习资源也非常全面。每天的挑战让我养成了解数独的习惯，感觉自己的逻辑思维能力有了很大提升。"</p>
+                            <span class="testimonial-author">- 陈小明，使用2年的忠实用户</span>
+                        </div>
+                        
+                        <div class="testimonial">
+                            <p class="testimonial-content">"作为一名数独初学者，学习模式对我帮助非常大。提示功能让我逐渐掌握了各种解题技巧，现在已经能挑战困难级别的题目了！界面设计也很舒适，尤其喜欢暗色主题。"</p>
+                            <span class="testimonial-author">- 林小华，数独学堂新用户</span>
+                        </div>
+                        
+                        <div class="testimonial">
+                            <p class="testimonial-content">"身为数独爱好者，我已经尝试过很多数独应用，但数独学堂无疑是最全面的一个。专家级别的题目足够有挑战性，而且从未遇到过重复的题目。学习中心的高级技巧分享也非常有价值。"</p>
+                            <span class="testimonial-author">- 赵教授，数独专家</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 发展历程 -->
+            <section class="about-section">
+                <h2 class="section-title">发展历程</h2>
+                <div class="section-content">
+                    <p>数独学堂从创立至今已经走过了不平凡的发展历程：</p>
+                    
+                    <div class="milestones">
+                        <div class="milestone">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-date">2020年3月</div>
+                            <h3 class="milestone-title">数独学堂正式上线</h3>
+                            <p class="milestone-desc">推出第一个版本，包含基础的数独游戏功能和简单的学习资源。</p>
+                        </div>
+                        
+                        <div class="milestone">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-date">2020年8月</div>
+                            <h3 class="milestone-title">用户突破10万</h3>
+                            <p class="milestone-desc">在短短5个月内，平台用户快速增长，证明了数独爱好者对高质量平台的需求。</p>
+                        </div>
+                        
+                        <div class="milestone">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-date">2021年1月</div>
+                            <h3 class="milestone-title">推出学习模式</h3>
+                            <p class="milestone-desc">为初学者开发专门的学习模式，提供细致的解题指导和技巧提示。</p>
+                        </div>
+                        
+                        <div class="milestone">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-date">2021年6月</div>
+                            <h3 class="milestone-title">举办首届线上数独大赛</h3>
+                            <p class="milestone-desc">吸引超过5000名参赛者，成为国内规模最大的线上数独比赛。</p>
+                        </div>
+                        
+                        <div class="milestone">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-date">2022年5月</div>
+                            <h3 class="milestone-title">全面升级平台</h3>
+                            <p class="milestone-desc">推出2.0版本，优化用户界面，增加主题切换，完善学习中心资源。</p>
+                        </div>
+                        
+                        <div class="milestone">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-date">2023年至今</div>
+                            <h3 class="milestone-title">持续创新发展</h3>
+                            <p class="milestone-desc">不断扩充题库，优化算法，丰富功能，致力于打造最优质的数独学习平台。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 联系我们 -->
+            <section class="about-section">
+                <h2 class="section-title">联系我们</h2>
+                <div class="section-content">
+                    <p>我们非常重视用户的反馈和建议，它们是我们不断改进的动力。如果您有任何问题、建议或合作意向，欢迎通过以下方式联系我们：</p>
+                    
+                    <div class="contact-info" style="margin: 1.5rem 0;">
+                        <p><i class="fas fa-envelope" style="margin-right: 0.5rem; color: var(--primary-color);"></i> 电子邮件：contact@sudokuschool.com</p>
+                        <p><i class="fas fa-phone" style="margin-right: 0.5rem; color: var(--primary-color);"></i> 联系电话：+86 10 8888 8888</p>
+                        <p><i class="fab fa-weixin" style="margin-right: 0.5rem; color: var(--primary-color);"></i> 官方微信：SudokuSchool</p>
+                    </div>
+                    
+                    <p>或者您也可以通过下方表单直接向我们发送消息：</p>
+                    
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">您的姓名</label>
+                            <input type="text" id="name" class="form-control" placeholder="请输入您的姓名">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">电子邮箱</label>
+                            <input type="email" id="email" class="form-control" placeholder="请输入您的电子邮箱">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">主题</label>
+                            <input type="text" id="subject" class="form-control" placeholder="请输入消息主题">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">消息内容</label>
+                            <textarea id="message" class="form-control form-textarea" placeholder="请输入您的消息内容"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">发送消息</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页面底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="quote-carousel" id="quote-carousel">
+                <p>"数独不仅是一个游戏，更是一种思维方式。" —— 数独学堂</p>
+            </div>
+            
+            <div class="quick-links">
+                <a href="../index.html">首页</a>
+                <a href="daily-challenge.html">今日挑战</a>
+                <a href="learning-center.html">学习中心</a>
+                <a href="history.html">数独历史</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="../js/main.js"></script>
+    <script src="../js/about.js"></script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="../css/floating-ball.css">
+    <script src="../js/floating-ball.js"></script>
+</body>
+</html> 

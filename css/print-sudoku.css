@@ -1,0 +1,101 @@
+/**
+ * 数独打印功能相关样式
+ */
+
+/* 打印模态框 */
+.print-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+/* 模态框内容 */
+.print-modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+}
+
+/* 关闭按钮 */
+.print-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+}
+
+.print-modal-close:hover {
+    color: #333;
+}
+
+/* 打印选项容器 */
+.print-options {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+}
+
+/* 打印选项按钮 */
+.print-options .btn {
+    min-width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.print-options .btn i {
+    margin-right: 8px;
+}
+
+/* 下载PDF按钮 */
+#download-pdf {
+    background-color: #e74c3c;
+}
+
+#download-pdf:hover {
+    background-color: #c0392b;
+}
+
+/* 下载图片按钮 */
+#download-image {
+    background-color: #3498db;
+}
+
+#download-image:hover {
+    background-color: #2980b9;
+}
+
+/* 打印预览样式 */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    .sudoku-print-container, .sudoku-print-container * {
+        visibility: visible;
+    }
+    
+    .sudoku-print-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+} 

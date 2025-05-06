@@ -1,0 +1,202 @@
+/**
+ * 数独答案查看功能相关样式
+ */
+
+/* 答案模态框 */
+.solution-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.solution-modal.active {
+    opacity: 1;
+}
+
+/* 模态框内容 */
+.solution-modal-content {
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.solution-modal.active .solution-modal-content {
+    transform: translateY(0);
+}
+
+/* 关闭按钮 */
+.solution-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.solution-modal-close:hover {
+    background-color: #f3f4f6;
+    color: #333;
+}
+
+/* 答案选项容器 */
+.solution-options {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 2rem;
+}
+
+/* 答案选项按钮 */
+.solution-options .btn {
+    min-width: 160px;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.solution-options .btn i {
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+/* 确认查看按钮 */
+#confirm-solution {
+    background-color: #f59e0b;
+    color: white;
+    border: none;
+}
+
+#confirm-solution:hover {
+    background-color: #d97706;
+    transform: translateY(-2px);
+}
+
+/* 取消按钮 */
+#cancel-solution {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+#cancel-solution:hover {
+    background-color: #e5e7eb;
+    transform: translateY(-2px);
+}
+
+/* 解答显示区域 */
+.solution-display {
+    max-width: 600px;
+}
+
+/* 解答网格 */
+.solution-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-gap: 1px;
+    margin: 24px auto;
+    width: 360px;
+    height: 360px;
+    background-color: #e5e7eb;
+    border: 2px solid #374151;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* 解答单元格 */
+.solution-cell {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #1f2937;
+    transition: background-color 0.2s ease;
+}
+
+/* 3x3宫格边框 */
+.solution-cell:nth-child(3n) {
+    border-right: 2px solid #374151;
+}
+
+.solution-cell:nth-child(9n) {
+    border-right: none;
+}
+
+.solution-cell:nth-child(n+19):nth-child(-n+27),
+.solution-cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid #374151;
+}
+
+/* 解答页脚 */
+.solution-footer {
+    margin-top: 24px;
+}
+
+.solution-footer .btn {
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.solution-footer .btn:hover {
+    background-color: #4f46e5;
+    transform: translateY(-2px);
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .solution-modal-content {
+        padding: 1.5rem;
+    }
+    
+    .solution-grid {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1;
+    }
+    
+    .solution-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .solution-options .btn {
+        width: 100%;
+    }
+} 

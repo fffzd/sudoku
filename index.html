@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数独学堂 - 专注数独学习与解题训练的中文平台</title>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sudoku.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/print-sudoku.css">
+    <link rel="stylesheet" href="css/solution-styles.css">
+    <!-- 引入字体图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 特定样式覆盖 -->
+    <style>
+        /* 主页特定样式 */
+        .hero-section {
+            background: linear-gradient(135deg, #4C9DF3 0%, #2563eb 60%, #1e40af 100%);
+            padding: 5rem 0 7rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 4rem;
+            border-radius: var(--border-radius-lg);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+        }
+        
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/pattern.png');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .hero-section::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,117.3C672,107,768,117,864,144C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            z-index: 2;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 3;
+        }
+        
+        .hero-title {
+            font-size: 3.2rem;
+            margin-bottom: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .hero-title span {
+            background: linear-gradient(90deg, #ffffff, #f0f4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            opacity: 1;
+            position: relative;
+            z-index: 2;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+            color: #ffffff;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+        
+        .hero-btn {
+            padding: 0.9rem 2rem;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+        }
+        
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 7px 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-outline {
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+            border-color: white;
+        }
+        
+        .hero-decoration {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.15;
+        }
+        
+        .hero-decoration.top-left {
+            top: 10%;
+            left: 5%;
+            width: 120px;
+            height: 120px;
+            background: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='120' height='120' rx='8' stroke='white' stroke-width='4'/%3E%3Cline x1='40' y1='2' x2='40' y2='118' stroke='white' stroke-width='2'/%3E%3Cline x1='80' y1='2' x2='80' y2='118' stroke='white' stroke-width='2'/%3E%3Cline x1='2' y1='40' x2='118' y2='40' stroke='white' stroke-width='2'/%3E%3Cline x1='2' y1='80' x2='118' y2='80' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .hero-decoration.bottom-right {
+            bottom: 15%;
+            right: 8%;
+            width: 150px;
+            height: 150px;
+            background: url("data:image/svg+xml,%3Csvg width='150' height='150' viewBox='0 0 150 150' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='150' height='150' rx='8' stroke='white' stroke-width='4'/%3E%3Cline x1='50' y1='2' x2='50' y2='148' stroke='white' stroke-width='2'/%3E%3Cline x1='100' y1='2' x2='100' y2='148' stroke='white' stroke-width='2'/%3E%3Cline x1='2' y1='50' x2='148' y2='50' stroke='white' stroke-width='2'/%3E%3Cline x1='2' y1='100' x2='148' y2='100' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+            animation: float 10s ease-in-out 1s infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+            75% {
+                transform: translateY(-5px) rotate(1deg);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .content-section {
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-title i {
+            color: var(--accent-color);
+        }
+        
+        .mode-cards {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .mode-card {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            width: 400px;
+            max-width: 90%;
+        }
+        
+        .mode-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .mode-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .mode-card:hover::after {
+            opacity: 1;
+        }
+        
+        .mode-card-icon {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary-color);
+            color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .mode-card:hover .mode-card-icon {
+            transform: scale(1.1);
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .card-content {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .mode-card .feature-list {
+            margin-top: 1rem;
+            list-style: none;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .mode-card .feature-list li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-list {
+            margin-top: 1rem;
+            list-style: none;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .feature-list li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-list li i {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .info-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            border-top: 4px solid var(--accent-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .info-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-card h3 i {
+            color: var(--accent-color);
+        }
+        
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            background-color: var(--bg-secondary);
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 4rem;
+            border-radius: var(--border-radius-lg);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 2rem auto 0;
+        }
+        
+        .stat-item {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .how-to-section {
+            margin-bottom: 4rem;
+            position: relative;
+        }
+        
+        .steps-container {
+            counter-reset: step;
+            position: relative;
+        }
+        
+        .step-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .step-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .steps-line {
+            position: absolute;
+            top: 0;
+            left: 30px;
+            width: 2px;
+            height: calc(100% - 60px);
+            background-color: var(--accent-color);
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        /* 技巧描述样式 */
+        .feature-list .technique-name {
+            white-space: nowrap;
+        }
+        
+        /* 学习中心链接样式 */
+        .learning-center-link {
+            color: #4C9DF3;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .learning-center-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 968px) {
+            .mode-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .mode-card {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 1rem 6rem;
+            }
+            
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-decoration {
+                display: none;
+            }
+            
+            .step-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .steps-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <div class="logo">数独<span>学堂</span></div>
+                <p class="header-slogan">专注数独学习与解题训练的中文平台</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="index.html" class="active">首页</a>
+                    <a href="pages/daily-challenge.html">每日挑战</a>
+                    <a href="pages/classic-mode.html">经典模式</a>
+                    <a href="pages/learning-center.html">学习中心</a>
+                    <a href="pages/recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main>
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-decoration top-left"></div>
+            <div class="hero-decoration bottom-right"></div>
+            <div class="container hero-content">
+                <h1 class="hero-title">挑战思维，<span>畅享数独乐趣</span></h1>
+                <p class="hero-subtitle">数独学堂为您提供丰富的数独题库、专业的解题技巧和友好的学习环境，从初学者到专家，都能在这里找到适合自己的数独世界。</p>
+                <div class="hero-buttons">
+                    <a href="pages/daily-challenge.html" class="hero-btn btn-primary">
+                        <i class="fas fa-calendar-day"></i> 今日挑战
+                    </a>
+                    <a href="pages/classic-mode.html" class="hero-btn btn-outline">
+                        <i class="fas fa-th"></i> 经典模式
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 游戏模式区域 -->
+        <section class="content-section container">
+            <h2 class="section-title"><i class="fas fa-gamepad"></i> 选择您的游戏模式</h2>
+            <div class="mode-cards">
+                <div class="mode-card">
+                    <div class="mode-card-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <h3 class="card-title">每日挑战</h3>
+                    <p class="card-content">每天一道精选数独题目，限时挑战自我，累积连续打卡天数赢取成就。坚持每日练习，快速提升解题能力！</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 每日更新精选题目</li>
+                        <li><i class="fas fa-check"></i> 实时计时挑战</li>
+                        <li><i class="fas fa-check"></i> 连续打卡获得成就</li>
+                        <li><i class="fas fa-check"></i> 自动保存进度</li>
+                    </ul>
+                    <a href="pages/daily-challenge.html" class="btn btn-primary">开始挑战</a>
+                </div>
+                
+                <div class="mode-card">
+                    <div class="mode-card-icon">
+                        <i class="fas fa-th"></i>
+                    </div>
+                    <h3 class="card-title">经典模式</h3>
+                    <p class="card-content">海量数独题库，从入门到专家，多种难度级别自由选择，提升解题技巧。自由练习，随时随地享受数独的乐趣！</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 四种难度级别</li>
+                        <li><i class="fas fa-check"></i> 数千道题目选择</li>
+                        <li><i class="fas fa-check"></i> 个性化推荐系统</li>
+                        <li><i class="fas fa-check"></i> 详细解题提示</li>
+                    </ul>
+                    <a href="pages/classic-mode.html" class="btn btn-primary">开始游戏</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特色功能区域 -->
+        <section class="content-section container">
+            <h2 class="section-title"><i class="fas fa-star"></i> 数独学堂特色功能</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="feature-title">交互式教程</h3>
+                    <p class="feature-desc">超过30个互动教程，循序渐进地教授数独解题技巧。从基础规则到高级策略，全方位提升解题能力。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="feature-title">智能提示系统</h3>
+                    <p class="feature-desc">卡关时提供个性化提示，不直接给出答案，而是引导思考方向，培养解题能力。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">进度追踪</h3>
+                    <p class="feature-desc">详细记录解题历史，分析解题时间和错误率，帮助识别需要改进的地方，有针对性地提升。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="feature-title">成就系统</h3>
+                    <p class="feature-desc">丰富的成就徽章激励持续学习，完成每日挑战和攻克困难题目可解锁特殊奖励。</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 数独介绍区域 -->
+        <section class="content-section container">
+            <h2 class="section-title"><i class="fas fa-info-circle"></i> 了解数独的魅力</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3><i class="fas fa-history"></i> 数独的历史与起源</h3>
+                    <p>数独起源于18世纪的瑞士，由数学家欧拉发明。后来在日本流行并命名为"数独"，意为"单独的数字"。1984年由日本益智游戏公司Nikoli推广，并在2004年后风靡全球。</p>
+                    <p>今天的数独已成为全球最受欢迎的逻辑游戏之一，每天有数百万人在解谜和享受数独带来的挑战。</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-book"></i> 数独规则</h3>
+                    <p>数独是一种9×9网格的逻辑填充游戏，初始状态下会有部分格子已填入数字。玩家需要在空白格子中填入1至9的数字，使得每行、每列和每个3×3子区域中的数字都不重复。</p>
+                    <p>标准数独有唯一解，可以通过纯粹的逻辑推理得出，不需要猜测。这种严谨而优雅的规则，让数独既适合休闲娱乐，也能锻炼逻辑思维。</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-brain"></i> 数独的益处</h3>
+                    <p>研究表明，定期解数独有以下益处：</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 增强逻辑推理和批判性思维能力</li>
+                        <li><i class="fas fa-check"></i> 提高专注力和耐心</li>
+                        <li><i class="fas fa-check"></i> 减轻压力，放松大脑</li>
+                        <li><i class="fas fa-check"></i> 延缓大脑衰老，预防痴呆</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-lightbulb"></i> 解题技巧与方法</h3>
+                    <p>掌握以下基本技巧，将大大提升您的数独解题能力：</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">唯一候选数法</strong>：寻找只有一个可能数字的单元格</li>
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">单元格排除法</strong>：通过排除法确定单元格数字</li>
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">区块摒除法</strong>：利用宫的特性排除可能性</li>
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">隐性数对/三数对</strong>：寻找隐藏的数字组合</li>
+                    </ul>
+                    <p>在我们的<a href="pages/learning-center.html" class="learning-center-link">学习中心</a>，您可以找到更多详细的解题策略和教程。</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-puzzle-piece"></i> 数独的变体类型</h3>
+                    <p>除了标准9×9数独，还有许多有趣的变体形式：</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">迷你数独</strong>：4×4或6×6网格，适合初学者和快速游戏</li>
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">杀手数独</strong>：增加了"笼"的概念，笼内数字总和已知</li>
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">对角线数独</strong>：要求两条对角线上的数字也不重复</li>
+                        <li><i class="fas fa-angle-right"></i> <strong class="technique-name">不规则数独</strong>：打破传统3×3宫格，形成不规则形状的区域</li>
+                    </ul>
+                    <p>尝试这些变体可以带来全新的解题体验和挑战，让您的数独之旅更加丰富多彩。</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-users"></i> 数独竞赛与社区</h3>
+                    <p>数独不仅是个人休闲活动，也是一项全球性的竞技项目：</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-trophy"></i> <strong>世界数独锦标赛</strong>：自2006年开始每年举办，汇集全球顶尖解题高手</li>
+                        <li><i class="fas fa-medal"></i> <strong>国家级别赛事</strong>：许多国家举办全国性数独比赛，选拔国家代表队</li>
+                        <li><i class="fas fa-globe"></i> <strong>在线社区</strong>：数独爱好者在全球范围内组成活跃的在线社区，分享技巧和创作原创谜题</li>
+                        <li><i class="fas fa-book-open"></i> <strong>专业出版物</strong>：有专门的数独杂志和书籍，发布高质量谜题和解题方法</li>
+                    </ul>
+                    <p>加入数独学堂社区，与志同道合的数独爱好者交流，提升解题能力！</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 如何使用区域 -->
+        <section class="how-to-section container">
+            <h2 class="section-title"><i class="fas fa-question-circle"></i> 如何开始您的数独之旅</h2>
+            <div class="steps-container">
+                <div class="steps-line"></div>
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">选择适合您的难度级别</h3>
+                        <p class="step-desc">数独学堂提供从简单到专家的四个难度级别。初学者可以从"简单"级别开始，熟悉数独规则和基本解题技巧。随着能力提升，可以逐渐挑战更高级别的题目。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">学习基本解题技巧</h3>
+                        <p class="step-desc">访问学习中心，通过互动教程学习数独的基本解题方法。掌握"唯一候选数"、"唯一余数"等技巧，能够解决大部分简单和中等难度的数独题目。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">参与每日挑战</h3>
+                        <p class="step-desc">每天完成一道特选数独题目，累积连续打卡天数。坚持每日练习是提升解题能力的最有效方法，同时还能解锁特别成就和奖励。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">加入社区交流</h3>
+                        <p class="step-desc">与其他数独爱好者分享解题心得，讨论高级技巧，参与排行榜竞争。社区交流不仅能获取新知识，还能在解题遇到困难时得到帮助。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 数独的历史 -->
+        <section class="history-section container">
+            <h2 class="section-title"><i class="fas fa-history"></i> 数独的历史长河</h2>
+            <div class="history-timeline">
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="timeline-date">1783年</div>
+                        <div class="timeline-content">
+                            <h3>数独的雏形</h3>
+                            <p>瑞士数学家莱昂哈德·欧拉发明了"拉丁方阵"，这被认为是现代数独的前身。欧拉提出了一种9×9的网格游戏，玩家需要将数字放置在网格中使得每行、每列中的数字都不重复。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">19世纪末</div>
+                        <div class="timeline-content">
+                            <h3>魔方报纸游戏</h3>
+                            <p>法国报纸开始发布类似数独的数字谜题，主要以魔方矩阵的形式出现。这些早期版本的游戏为现代数独奠定了基础。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1979年</div>
+                        <div class="timeline-content">
+                            <h3>现代数独诞生</h3>
+                            <p>美国霍华德·加纳斯在《戴尔铅笔解谜与单词游戏》杂志上首次发布了现代形式的数独游戏，当时命名为"Number Place"（数字位置）。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1984年</div>
+                        <div class="timeline-content">
+                            <h3>登陆日本</h3>
+                            <p>日本益智游戏公司Nikoli引入这种游戏并将其命名为"数独"，意为"单独的数字"。他们规范了游戏规则，要求谜题必须有唯一解，并确保对称的初始布局。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2004年</div>
+                        <div class="timeline-content">
+                            <h3>全球风靡</h3>
+                            <p>新西兰法官韦恩·古尔德（Wayne Gould）开发了能生成数独谜题的计算机程序，并成功将数独推广到《泰晤士报》。随后，数独在全球范围内迅速走红，成为了报纸和杂志的常见游戏。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2005年</div>
+                        <div class="timeline-content">
+                            <h3>首届世界数独锦标赛</h3>
+                            <p>第一届世界数独锦标赛在意大利卢卡举行，来自22个国家的85名选手参赛。这标志着数独作为一项国际智力竞技项目的地位确立。</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">现在</div>
+                        <div class="timeline-content">
+                            <h3>数字时代的数独</h3>
+                            <p>数独已发展出各种变体和难度级别，从手机应用到网站平台，每天有数百万人在解谜。数独不仅是休闲娱乐，还被认为有助于保持大脑敏捷和预防认知衰退。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="history-note">
+                <p><i class="fas fa-lightbulb"></i> 有趣的是，虽然"数独"这个名字来自日本，意为"单独的数字"（数字は独身に限る），但其现代形式其实诞生于美国，随后在日本得到了普及和规范，最终通过英国报纸重新向全世界扩散，成为了全球性的智力游戏。</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页面底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="quote-carousel" id="quote-carousel">
+                <p>"数独是大脑的瑜伽。" —— 韦恩·古尔德</p>
+            </div>
+            
+            <div class="quick-links">
+                <a href="pages/daily-challenge.html">今日挑战</a>
+                <a href="pages/learning-center.html">学习中心</a>
+                <a href="pages/recommended-books.html">名著推荐</a>
+                <a href="pages/about.html">关于我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="js/sudoku.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/main.js"></script>
+    <!-- 引入打印和下载相关库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 引入打印功能 -->
+    <script src="js/print-sudoku.js"></script>
+    <!-- 引入查看答案功能 -->
+    <script src="js/show-solution.js"></script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="css/floating-ball.css">
+    <script src="js/floating-ball.js"></script>
+</body>
+</html> 

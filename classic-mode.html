@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数独学堂 - 经典模式</title>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/classic-mode.css">
+    <!-- 引入悬浮球样式 -->
+    <link rel="stylesheet" href="css/floating-ball.css">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header class="site-header">
+        <div class="container">
+            <div class="logo">
+                <h1>数独学堂</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="classic-mode.html" class="active">经典模式</a></li>
+                    <li><a href="special-mode.html">特殊模式</a></li>
+                    <li><a href="learn.html">学习资料</a></li>
+                    <li><a href="about.html">关于我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="classic-container">
+        <h2 class="page-title">经典数独</h2>
+        
+        <div class="main-content">
+            <!-- 左侧面板：选项卡式界面 -->
+            <section class="left-panel">
+                <!-- 选项卡导航 -->
+                <div class="tabs-nav">
+                    <button class="tab-button active" data-tab="generate">随机生成</button>
+                    <button class="tab-button" data-tab="library">题库</button>
+                    <button class="tab-button" data-tab="history">历史记录</button>
+                </div>
+                
+                <!-- 选项卡内容 -->
+                <div class="tab-content active" id="generate-tab">
+                    <div class="generate-options">
+                        <div class="difficulty-selector">
+                            <div class="difficulty-info">
+                                <span class="difficulty-name">中等</span>
+                                <span class="difficulty-stars">★★★☆☆</span>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="5" value="3" class="slider" id="difficulty-slider">
+                                <div class="slider-labels">
+                                    <span>简单</span>
+                                    <span>中等</span>
+                                    <span>困难</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="generate-btn">生成数独</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="library-tab">
+                    <div class="library-options">
+                        <input type="text" class="search-input" placeholder="搜索题目...">
+                        <div class="puzzle-list">
+                            <div class="puzzle-item">
+                                <div class="puzzle-title">经典数独 #1</div>
+                                <div class="puzzle-difficulty">难度：★★☆☆☆</div>
+                            </div>
+                            <div class="puzzle-item">
+                                <div class="puzzle-title">经典数独 #2</div>
+                                <div class="puzzle-difficulty">难度：★★★☆☆</div>
+                            </div>
+                            <div class="puzzle-item">
+                                <div class="puzzle-title">经典数独 #3</div>
+                                <div class="puzzle-difficulty">难度：★★★★☆</div>
+                            </div>
+                            <!-- 更多题目... -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="history-tab">
+                    <div class="history-options">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>难度</th>
+                                    <th>用时</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-list">
+                                <!-- 历史记录将通过JavaScript动态添加 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 右侧面板：数独游戏 -->
+            <section class="right-panel">
+                <div class="sudoku-container">
+                    <div class="puzzle-info">
+                        <div class="difficulty">难度：<span id="current-difficulty">中等 ★★★☆☆</span></div>
+                        <div class="timer">用时：<span id="game-timer">00:00</span></div>
+                    </div>
+                    
+                    <!-- 数独网格 -->
+                    <div class="sudoku-board" id="sudoku-board">
+                        <!-- 单元格将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <!-- 控制面板 -->
+                    <div class="control-panel">
+                        <!-- 数字选择器 -->
+                        <div class="number-selector">
+                            <button class="number-btn" data-number="1">1</button>
+                            <button class="number-btn" data-number="2">2</button>
+                            <button class="number-btn" data-number="3">3</button>
+                            <button class="number-btn" data-number="4">4</button>
+                            <button class="number-btn" data-number="5">5</button>
+                            <button class="number-btn" data-number="6">6</button>
+                            <button class="number-btn" data-number="7">7</button>
+                            <button class="number-btn" data-number="8">8</button>
+                            <button class="number-btn" data-number="9">9</button>
+                            <button class="number-btn" data-number="0">清除</button>
+                        </div>
+                        
+                        <!-- 工具按钮 -->
+                        <div class="tool-buttons">
+                            <div class="tool-btn" id="notes-btn">
+                                <i class="fas fa-pencil-alt"></i>
+                                <span>笔记</span>
+                            </div>
+                            <div class="tool-btn" id="hint-btn">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>提示</span>
+                            </div>
+                            <div class="tool-btn" id="undo-btn">
+                                <i class="fas fa-undo"></i>
+                                <span>撤销</span>
+                            </div>
+                            <div class="tool-btn" id="check-btn">
+                                <i class="fas fa-check-circle"></i>
+                                <span>检查</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 操作按钮 -->
+                        <div class="action-buttons">
+                            <button class="btn-primary" id="reset-btn">重置</button>
+                            <button class="btn-primary" id="new-game-btn">新游戏</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部提示 -->
+                    <div class="tips">
+                        提示：选择一个单元格，然后点击数字或使用键盘输入。按住Alt键进入笔记模式。
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2023 数独学堂. 版权所有.</p>
+        </div>
+    </footer>
+
+    <!-- 完成游戏的弹窗 -->
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <h3>恭喜！</h3>
+            <p>你已成功完成数独游戏！</p>
+            <div class="completion-info">
+                <p>难度：<span id="modal-difficulty">中等</span></p>
+                <p>用时：<span id="modal-time">00:00</span></p>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-primary" id="new-game-modal-btn">新游戏</button>
+                <button class="btn-secondary" id="close-modal-btn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="js/classic-mode.js"></script>
+    <!-- 引入悬浮球功能 -->
+    <script src="js/floating-ball.js"></script>
+    <!-- 引入打印和下载相关库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 引入打印功能 -->
+    <script src="js/print-sudoku.js"></script>
+    <!-- 引入查看答案功能 -->
+    <script src="js/show-solution.js"></script>
+</body>
+</html> 

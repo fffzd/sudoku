@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义题目 - 数独学堂</title>
+    <meta name="description" content="创建你自己的数独题目，设计独特的谜题分享给其他玩家。">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/print-sudoku.css">
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义题目页面样式 */
+        .custom-puzzle-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .instructions {
+            background-color: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        /* 数独网格样式（精致风格） */
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            aspect-ratio: 1;
+            background: #fff;
+            border: 2px solid #222;
+        }
+        .sudoku-cell {
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #222;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s;
+            border: 1px solid #ddd;
+            aspect-ratio: 1;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        .sudoku-cell.selected {
+            background-color: var(--accent-color, #2563eb);
+            color: #fff;
+        }
+        .sudoku-cell:hover {
+            background-color: #f0f4fa;
+        }
+
+        /* 数字选择器样式 */
+        .number-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .number-btn {
+            padding: 15px;
+            font-size: 1.2rem;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .number-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .number-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* 操作按钮样式 */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .save-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+        }
+
+        .save-btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .clear-btn:hover {
+            background-color: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
+        .validate-btn {
+            background-color: #10b981;
+            color: white;
+            border: none;
+        }
+
+        .validate-btn:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+        }
+
+        /* 错误提示样式 */
+        .error-message {
+            color: #ef4444;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">自定义题目 - 创造你的数独谜题</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="daily-challenge.html">每日挑战</a>
+                    <a href="classic-mode.html">经典模式</a>
+                    <a href="learning-center.html">学习中心</a>
+                    <a href="recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="custom-puzzle-container">
+        <h1 class="page-title">创建自定义数独题目</h1>
+
+        <!-- 使用说明 -->
+        <div class="instructions">
+            <h3>使用说明</h3>
+            <ul>
+                <li>点击格子并输入数字1-9来填写题目</li>
+                <li>使用虚拟数字键盘或键盘输入数字</li>
+                <li>点击清空按钮可重新开始</li>
+                <li>点击验证按钮检查题目是否有效</li>
+                <li>点击保存按钮将题目保存到题库</li>
+            </ul>
+        </div>
+
+        <!-- 数独网格 -->
+        <div class="sudoku-grid" id="custom-grid"></div>
+
+        <!-- 数字选择器 -->
+        <div class="number-selector">
+            <button class="number-btn" data-number="1">1</button>
+            <button class="number-btn" data-number="2">2</button>
+            <button class="number-btn" data-number="3">3</button>
+            <button class="number-btn" data-number="4">4</button>
+            <button class="number-btn" data-number="5">5</button>
+            <button class="number-btn" data-number="6">6</button>
+            <button class="number-btn" data-number="7">7</button>
+            <button class="number-btn" data-number="8">8</button>
+            <button class="number-btn" data-number="9">9</button>
+            <button class="number-btn" data-number="0">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <button class="action-btn clear-btn" id="clear-btn">
+                <i class="fas fa-trash"></i>
+                清空
+            </button>
+            <button class="action-btn validate-btn" id="validate-btn">
+                <i class="fas fa-check-circle"></i>
+                验证题目
+            </button>
+            <button class="action-btn save-btn" id="save-btn">
+                <i class="fas fa-save"></i>
+                保存题目
+            </button>
+        </div>
+
+        <!-- 错误提示 -->
+        <div class="error-message" id="error-message"></div>
+    </main>
+
+    <!-- 自定义题目脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化变量
+            let selectedCell = null;
+            const grid = document.getElementById('custom-grid');
+            const numberBtns = document.querySelectorAll('.number-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const validateBtn = document.getElementById('validate-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const errorMessage = document.getElementById('error-message');
+
+            // 创建9x9网格
+            for (let i = 0; i < 81; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'sudoku-cell';
+                cell.dataset.index = i;
+
+                // 经典模式主棋盘粗边框逻辑
+                const row = Math.floor(i / 9);
+                const col = i % 9;
+                // 先全部细灰色线，后覆盖粗深色线
+                // 最外层
+                if (row === 0) cell.style.borderTop = '2px solid #222';
+                if (row === 8) cell.style.borderBottom = '2px solid #222';
+                if (col === 0) cell.style.borderLeft = '2px solid #222';
+                if (col === 8) cell.style.borderRight = '2px solid #222';
+                // 3x3宫格粗线
+                if (col === 2 || col === 5) cell.style.borderRight = '2px solid #222';
+                if (row === 2 || row === 5) cell.style.borderBottom = '2px solid #222';
+
+                grid.appendChild(cell);
+
+                // 添加点击事件
+                cell.addEventListener('click', () => {
+                    // 移除之前选中的单元格
+                    if (selectedCell) {
+                        selectedCell.classList.remove('selected');
+                    }
+                    // 选中当前单元格
+                    cell.classList.add('selected');
+                    selectedCell = cell;
+                });
+            }
+
+            // 数字按钮点击事件
+            numberBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (selectedCell) {
+                        const number = btn.dataset.number;
+                        selectedCell.textContent = number === '0' ? '' : number;
+                    }
+                });
+            });
+
+            // 键盘输入事件
+            document.addEventListener('keydown', (e) => {
+                if (selectedCell) {
+                    if (e.key >= '1' && e.key <= '9') {
+                        selectedCell.textContent = e.key;
+                    } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                        selectedCell.textContent = '';
+                    }
+                }
+            });
+
+            // 清空按钮事件
+            clearBtn.addEventListener('click', () => {
+                if (confirm('确定要清空所有已填写的数字吗？')) {
+                    document.querySelectorAll('.sudoku-cell').forEach(cell => {
+                        cell.textContent = '';
+                    });
+                    hideError();
+                }
+            });
+
+            // 验证题目
+            validateBtn.addEventListener('click', () => {
+                const puzzle = getPuzzleState();
+                if (validatePuzzle(puzzle)) {
+                    showError('题目有效！可以保存使用。', 'success');
+                } else {
+                    showError('题目无效！请检查是否符合数独规则。');
+                }
+            });
+
+            // 保存题目
+            saveBtn.addEventListener('click', () => {
+                const puzzle = getPuzzleState();
+                if (!validatePuzzle(puzzle)) {
+                    if (confirm('当前题目不符合数独规则，是否仍要保存？')) {
+                        savePuzzle(puzzle);
+                    }
+                } else {
+                    savePuzzle(puzzle);
+                }
+            });
+
+            // 保存题目的函数
+            function savePuzzle(puzzle) {
+                // 生成题目ID
+                const puzzleId = generatePuzzleId();
+                
+                // 保存题目到本地存储
+                const customPuzzles = JSON.parse(localStorage.getItem('custom_puzzles') || '{}');
+                customPuzzles[puzzleId] = {
+                    grid: puzzle,
+                    date: new Date().toISOString(),
+                    difficulty: calculateDifficulty(puzzle)
+                };
+                localStorage.setItem('custom_puzzles', JSON.stringify(customPuzzles));
+
+                // 显示成功消息
+                showError('题目保存成功！可以在经典模式中的"用户生成"分类找到。', 'success');
+                
+                // 跳转到经典模式
+                setTimeout(() => {
+                    window.location.href = 'classic-mode.html';
+                }, 2000);
+            }
+
+            // 获取当前题目状态
+            function getPuzzleState() {
+                const puzzle = [];
+                document.querySelectorAll('.sudoku-cell').forEach(cell => {
+                    puzzle.push(cell.textContent ? parseInt(cell.textContent) : 0);
+                });
+                return puzzle;
+            }
+
+            // 验证题目是否有效
+            function validatePuzzle(puzzle) {
+                // 检查是否至少填写了17个数字（最少所需数字）
+                const filledCount = puzzle.filter(n => n !== 0).length;
+                if (filledCount < 17) {
+                    showError('题目至少需要17个数字才能确保有解！');
+                    return false;
+                }
+
+                // 检查行
+                for (let i = 0; i < 9; i++) {
+                    const row = puzzle.slice(i * 9, (i + 1) * 9);
+                    if (!isValidUnit(row)) {
+                        showError(`第${i + 1}行有重复数字！`);
+                        return false;
+                    }
+                }
+
+                // 检查列
+                for (let i = 0; i < 9; i++) {
+                    const col = [];
+                    for (let j = 0; j < 9; j++) {
+                        col.push(puzzle[j * 9 + i]);
+                    }
+                    if (!isValidUnit(col)) {
+                        showError(`第${i + 1}列有重复数字！`);
+                        return false;
+                    }
+                }
+
+                // 检查3x3宫格
+                for (let block = 0; block < 9; block++) {
+                    const blockNumbers = [];
+                    const blockRow = Math.floor(block / 3) * 3;
+                    const blockCol = (block % 3) * 3;
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            blockNumbers.push(puzzle[(blockRow + i) * 9 + blockCol + j]);
+                        }
+                    }
+                    if (!isValidUnit(blockNumbers)) {
+                        showError(`第${block + 1}个宫格有重复数字！`);
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            // 验证单个单元（行/列/宫）是否有效
+            function isValidUnit(unit) {
+                const numbers = unit.filter(n => n !== 0);
+                return new Set(numbers).size === numbers.length;
+            }
+
+            // 生成题目ID
+            function generatePuzzleId() {
+                const timestamp = new Date().getTime();
+                const random = Math.floor(Math.random() * 1000);
+                return `CUSTOM-${timestamp}-${random}`;
+            }
+
+            // 计算题目难度（简单实现）
+            function calculateDifficulty(puzzle) {
+                const filledCount = puzzle.filter(n => n !== 0).length;
+                if (filledCount >= 50) return 1; // 简单
+                if (filledCount >= 40) return 2; // 中等
+                if (filledCount >= 30) return 3; // 困难
+                return 4; // 专家
+            }
+
+            // 显示错误信息
+            function showError(message, type = 'error') {
+                errorMessage.textContent = message;
+                errorMessage.className = `error-message show ${type}`;
+                errorMessage.style.color = type === 'success' ? '#10b981' : '#ef4444';
+            }
+
+            // 隐藏错误信息
+            function hideError() {
+                errorMessage.className = 'error-message';
+            }
+        });
+    </script>
+</body>
+</html> 

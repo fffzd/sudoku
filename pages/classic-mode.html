@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经典模式 - 数独学堂</title>
+    <meta name="description" content="数独学堂经典模式，从入门到大师的阶梯，多种难度级别，海量题库满足不同水平的数独爱好者。">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/print-sudoku.css">
+    <link rel="stylesheet" href="../css/solution-styles.css">
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 经典模式特定样式 -->
+    <style>
+        /* 主界面布局 */
+        .classic-mode-container {
+            display: flex;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        /* 左侧选项区 */
+        .options-panel {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        
+        .panel-title {
+            font-size: 1.2rem;
+            padding-bottom: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--secondary-color);
+            color: var(--text-primary);
+        }
+        
+        /* 选项卡切换 */
+        .tab-buttons {
+            display: flex;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: var(--spacing-sm);
+            text-align: center;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--secondary-color);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .tab-button:first-child {
+            border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
+        }
+        
+        .tab-button:last-child {
+            border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+        }
+        
+        .tab-button.active {
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            border-color: var(--accent-color);
+        }
+        
+        /* 选项组 */
+        .option-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .option-group-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        /* 随机生成按钮样式 */
+        .random-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f0f5ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 难度选择滑块 */
+        .difficulty-slider {
+            margin: var(--spacing-md) 0;
+        }
+        
+        .slider-container {
+            position: relative;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            background: #2563eb;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xs);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        .difficulty-display {
+            text-align: center;
+            margin-top: var(--spacing-md);
+        }
+        
+        .difficulty-stars {
+            color: var(--highlight-color);
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+        }
+        
+        .difficulty-name {
+            margin-top: var(--spacing-xs);
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        /* 分类选择 */
+        .category-list {
+            margin: var(--spacing-sm) 0;
+        }
+        
+        .category-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .category-item:hover {
+            color: var(--accent-color);
+        }
+        
+        .category-item.active {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .category-item i {
+            margin-right: var(--spacing-sm);
+            width: 20px;
+            text-align: center;
+        }
+        
+        .category-counter {
+            margin-left: auto;
+            background-color: var(--bg-primary);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+        
+        /* 题目编号输入 */
+        .puzzle-id-input {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* 右侧内容区 */
+        .sudoku-content {
+            flex: 1;
+        }
+        
+        /* 经典模式标题 */
+        .mode-title {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+        
+        /* 数独信息 */
+        .sudoku-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .info-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .puzzle-id {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+        
+        .puzzle-difficulty {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .puzzle-difficulty .difficulty-stars {
+            font-size: 1rem;
+        }
+        
+        /* 历史记录 */
+        .history-list {
+            margin-top: var(--spacing-xl);
+        }
+        
+        .history-title {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 1px solid var(--secondary-color);
+            color: var(--text-primary);
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .history-table th, .history-table td {
+            padding: var(--spacing-sm);
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .history-table th {
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+        
+        .history-table td {
+            color: var(--text-secondary);
+        }
+        
+        .history-table tr:hover td {
+            background-color: var(--bg-secondary);
+        }
+        
+        /* 数独操作按钮 */
+        .sudoku-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .classic-mode-container {
+                flex-direction: column;
+            }
+            
+            .options-panel {
+                width: 100%;
+                position: static;
+                max-height: none;
+            }
+        }
+        
+        /* 笔记侧边栏样式 */
+        .notes-sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .notes-sidebar.active {
+            right: 0;
+        }
+        
+        .notes-sidebar-header {
+            padding: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .notes-sidebar-close,
+        .download-notes-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+        
+        .notes-sidebar-close:hover,
+        .download-notes-btn:hover {
+            opacity: 1;
+        }
+        
+        /* 下载笔记对话框样式 */
+        .download-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .download-dialog.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .download-dialog-content {
+            width: 90%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .download-dialog-header {
+            padding: 15px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .download-dialog-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .download-dialog-body {
+            padding: 20px;
+        }
+        
+        .download-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .download-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .download-option:hover {
+            background-color: #f8f9fa;
+            border-color: #ddd;
+        }
+        
+        .download-option.active {
+            background-color: #f1f5f9;
+            border-color: var(--accent-color);
+        }
+        
+        .download-option-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        
+        .download-option-info {
+            flex: 1;
+        }
+        
+        .download-option-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .download-option-desc {
+            font-size: 13px;
+            color: #777;
+        }
+        
+        .download-dialog-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .download-cancel-btn {
+            padding: 8px 15px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .download-confirm-btn {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .notes-sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .notes-input-container {
+            margin-bottom: 20px;
+        }
+        
+        .notes-input-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .notes-textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        /* 富文本编辑器样式 */
+        .note-editor {
+            width: 100%;
+            min-height: 150px;
+            max-height: 300px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            overflow-y: auto;
+            background-color: white;
+            outline: none;
+        }
+        
+        .note-editor:empty:before {
+            content: '在这里记录你的解题思路、技巧和想法...';
+            color: #999;
+        }
+        
+        .note-editor img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+        
+        .saved-notes-container {
+            flex: 1;
+        }
+        
+        .saved-notes-container h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: var(--text-primary);
+        }
+        
+        .saved-notes-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .note-item {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .note-item:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .note-date {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        
+        .note-content {
+            font-size: 14px;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .note-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 5px 0;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+        
+        .note-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .note-edit-btn,
+        .note-delete-btn {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        
+        .note-edit-btn:hover,
+        .note-delete-btn:hover {
+            opacity: 1;
+        }
+        
+        .note-edit-btn {
+            color: var(--accent-color);
+        }
+        
+        .note-delete-btn {
+            color: #ef4444;
+        }
+        
+        .notes-sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .save-note-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .save-note-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .clear-btn {
+            background-color: transparent;
+            color: #777;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .clear-btn:hover {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .notes-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            display: none;
+        }
+        
+        .notes-overlay.active {
+            display: block;
+        }
+        
+        /* 笔记标记图标样式 */
+        .has-notes-indicator {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: var(--accent-color);
+            font-size: 10px;
+        }
+        
+        .info-right {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 修改按钮样式使其更协调 */
+        #toggle-notes-sidebar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        #toggle-notes-sidebar:hover {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        /* 添加响应式样式 */
+        @media (max-width: 768px) {
+            .notes-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        
+        /* 截图功能样式 */
+        .notes-tools {
+            display: flex;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        
+        .screenshot-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background-color: #f1f5f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .screenshot-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        .screenshot-preview {
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .screenshot-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #f1f5f9;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .screenshot-close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .screenshot-preview-content {
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .screenshot-preview-content img {
+            max-width: 100%;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+        
+        .screenshot-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .screenshot-actions button {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .insert-screenshot-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+        }
+        
+        .download-screenshot-btn {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+        
+        /* 图片上传和处理对话框样式 */
+        .image-process-dialog,
+        .image-process-content,
+        .image-process-header,
+        .image-process-body,
+        .image-preview-container,
+        .image-preview,
+        .image-controls,
+        .crop-overlay,
+        .crop-handle,
+        .process-controls,
+        #upload-image-btn,
+        #image-input {
+            display: none;
+        }
+        
+        /* 题目名称样式（统一官方与用户生成） */
+        .puzzle-item-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0 4px 0;
+            padding: 0;
+        }
+        .title-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #222;
+            flex: 1;
+            word-break: break-all;
+        }
+        .title-edit-input {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background-color: white;
+        }
+        .btn-edit-name {
+            padding: 4px 8px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            display: inline-block;
+        }
+        .btn-edit-name:hover {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        .puzzle-list-item {
+            background-color: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+        .puzzle-list-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">经典模式 - 无尽的数独挑战</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="daily-challenge.html">每日挑战</a>
+                    <a href="#" class="active">经典模式</a>
+                    <a href="learning-center.html">学习中心</a>
+                    <a href="recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="container">
+        <div class="classic-mode-container">
+            <!-- 左侧选项面板 -->
+            <aside class="options-panel">
+                <h3 class="panel-title">数独选项</h3>
+                
+                <!-- 选项卡切换 -->
+                <div class="tab-buttons">
+                    <div class="tab-button active" data-tab="random">随机生成</div>
+                    <div class="tab-button" data-tab="library">经典题库</div>
+                </div>
+                
+                <!-- 随机生成选项卡 -->
+                <div class="tab-content" id="random-tab">
+                    <div class="option-group">
+                        <h4 class="option-group-title">难度选择</h4>
+                        <div class="difficulty-slider">
+                            <div class="slider-container">
+                                <input type="range" min="1" max="5" value="2" class="slider" id="difficulty-slider">
+                                <div class="slider-labels">
+                                    <span>初级</span>
+                                    <span>专家</span>
+                                </div>
+                            </div>
+                            <div class="difficulty-display">
+                                <div class="difficulty-stars" id="difficulty-stars">★★☆☆☆</div>
+                                <div class="difficulty-name" id="difficulty-name">简单</div>
+                            </div>
+                        </div>
+                        <div class="random-buttons">
+                            <button class="btn btn-primary" id="generate-btn">
+                                <i class="fas fa-dice"></i> 生成数独
+                            </button>
+                            <button class="btn btn-secondary" id="save-to-library-btn">
+                            <i class="fas fa-save"></i> 保存到题库
+                        </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 经典题库选项卡 -->
+                <div class="tab-content" id="library-tab" style="display: none;">
+                    <!-- 搜索和筛选区域 -->
+                    <div class="option-group">
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="搜索题目关键词..." id="puzzle-search">
+                            <button class="search-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                        
+                        <div class="filters">
+                            <h4 class="option-group-title">难度筛选</h4>
+                            <div class="difficulty-filter">
+                                <label class="filter-item">
+                                    <input type="checkbox" checked> 
+                                    <span class="filter-text">简单</span>
+                                    <span class="filter-count">42</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" checked> 
+                                    <span class="filter-text">中等</span>
+                                    <span class="filter-count">85</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" checked> 
+                                    <span class="filter-text">困难</span>
+                                    <span class="filter-count">94</span>
+                                </label>
+                                <label class="filter-item">
+                                    <input type="checkbox" checked> 
+                                    <span class="filter-text">专家</span>
+                                    <span class="filter-count">60</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <h4 class="option-group-title">题库分类</h4>
+                        <div class="category-list">
+                            <div class="category-item active">
+                                <i class="fas fa-star"></i>
+                                <span>精选题库</span>
+                                <span class="category-counter">125</span>
+                            </div>
+                            <div class="category-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>教学题集</span>
+                                <span class="category-counter">78</span>
+                            </div>
+                            <div class="category-item">
+                                <i class="fas fa-trophy"></i>
+                                <span>锦标赛题目</span>
+                                <span class="category-counter">42</span>
+                            </div>
+                            <div class="category-item">
+                                <i class="fas fa-fire"></i>
+                                <span>热门挑战</span>
+                                <span class="category-counter">36</span>
+                            </div>
+                            <div class="category-item">
+                                <i class="fas fa-user-edit"></i>
+                                <span>用户生成</span>
+                                <span class="category-counter" id="custom-puzzles-counter">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 添加创建自定义题目按钮 -->
+                    <div class="option-group">
+                        <button class="btn btn-primary" id="create-custom-btn" style="width: 100%;">
+                            <i class="fas fa-plus"></i> 创建自定义题目
+                        </button>
+                    </div>
+                    
+                    <!-- 题目编号跳转 -->
+                    <div class="option-group">
+                        <h4 class="option-group-title">题目编号跳转</h4>
+                        <div class="id-jump-container">
+                            <input type="text" class="puzzle-id-input" placeholder="例如：GSM203" id="puzzle-id-input">
+                            <button class="btn btn-primary" id="jump-btn">跳转</button>
+                        </div>
+                        <div class="id-input-help">
+                            <i class="fas fa-info-circle"></i>
+                            <span>输入题目编号可直接跳转到指定题目</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 题库列表区域 -->
+                    <div class="option-group">
+                        <h4 class="option-group-title">题目列表</h4>
+                        <div class="puzzle-list" id="puzzle-list">
+                            <!-- 题目列表将由JS动态生成 -->
+                            <div class="puzzle-list-item">
+                                <div class="puzzle-item-header">
+                                    <span class="puzzle-item-id">CLS-2023-0101-001</span>
+                                    <span class="puzzle-item-difficulty">★☆☆☆☆</span>
+                                </div>
+                                <div class="puzzle-item-description">
+                                    入门级数独，适合初学者
+                                </div>
+                                <div class="puzzle-item-actions">
+                                    <button class="btn-small btn-play" data-id="CLS-2023-0101-001">开始</button>
+                                </div>
+                            </div>
+                            
+                            <div class="puzzle-list-item">
+                                <div class="puzzle-item-header">
+                                    <span class="puzzle-item-id">CLS-2023-0202-002</span>
+                                    <span class="puzzle-item-difficulty">★★☆☆☆</span>
+                                </div>
+                                <div class="puzzle-item-description">
+                                    简单难度，适合有基础的玩家
+                                </div>
+                                <div class="puzzle-item-actions">
+                                    <button class="btn-small btn-play" data-id="CLS-2023-0202-002">开始</button>
+                                </div>
+                            </div>
+                            
+                            <div class="puzzle-list-item">
+                                <div class="puzzle-item-header">
+                                    <span class="puzzle-item-id">GSM-2023-0101</span>
+                                    <span class="puzzle-item-difficulty">★★☆☆☆</span>
+                                </div>
+                                <div class="puzzle-item-description">
+                                    锦标赛简单题目
+                                </div>
+                                <div class="puzzle-item-actions">
+                                    <button class="btn-small btn-play" data-id="GSM-2023-0101">开始</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 分页控制 -->
+                        <div class="pagination">
+                            <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                            <span class="pagination-info">第 1 页 / 共 5 页</span>
+                            <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- 右侧数独内容区 -->
+            <div class="sudoku-content">
+                <h2 class="mode-title">经典数独</h2>
+                
+                <div class="sudoku-info">
+                    <div class="info-left">
+                        <div class="puzzle-id">ID: CLS-2023-0628</div>
+                        <div class="puzzle-difficulty">
+                            难度：<span class="difficulty-stars">★★☆☆☆</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 添加侧边栏控制按钮 -->
+                    <div class="info-right">
+                        <button class="btn btn-outline" id="toggle-notes-sidebar">
+                            <i class="fas fa-sticky-note"></i> 笔记本
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 数独网格 -->
+                <div class="sudoku-grid" id="classic-grid">
+                    <!-- 数独格子将通过JS动态生成 -->
+                </div>
+                
+                <!-- 数字选择器 -->
+                <div class="number-selector" id="number-selector">
+                    <button class="number-btn" data-number="1">1</button>
+                    <button class="number-btn" data-number="2">2</button>
+                    <button class="number-btn" data-number="3">3</button>
+                    <button class="number-btn" data-number="4">4</button>
+                    <button class="number-btn" data-number="5">5</button>
+                    <button class="number-btn" data-number="6">6</button>
+                    <button class="number-btn" data-number="7">7</button>
+                    <button class="number-btn" data-number="8">8</button>
+                    <button class="number-btn" data-number="9">9</button>
+                    <button class="number-btn" data-number="0">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                </div>
+                
+                <!-- 内联样式实现功能按钮 -->
+                <style>
+                    .game-buttons-container {
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                        margin: 20px auto;
+                        max-width: 800px;
+                    }
+                    
+                    .game-button {
+                        height: 45px;
+                        padding: 0 20px;
+                        background-color: white;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        min-width: 90px;
+                    }
+                    
+                    .game-button:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    }
+                    
+                    .game-button i {
+                        margin-right: 8px;
+                    }
+                    
+                    .notes-button-container {
+                        display: flex;
+                    }
+                    
+                    .notes-button-container .game-button {
+                        border-radius: 5px 0 0 5px;
+                        border-right: none;
+                    }
+                    
+                    .notes-status-indicator {
+                        display: flex;
+                        align-items: center;
+                        padding: 0 15px;
+                        background-color: #6b7280;
+                        color: white;
+                        border-radius: 0 5px 5px 0;
+                    }
+                </style>
+                
+                <div class="game-buttons-container">
+                    <button class="game-button" id="hint-button">
+                        <i class="fas fa-lightbulb"></i> 提示
+                    </button>
+                    
+                    <div class="notes-button-container">
+                        <button class="game-button" id="notes-button">
+                            <i class="fas fa-pencil-alt"></i> 笔记模式
+                        </button>
+                        <div class="notes-status-indicator">关闭</div>
+                    </div>
+                    
+                    <button class="game-button" id="check-button">
+                        <i class="fas fa-check-circle"></i> 检查
+                    </button>
+                    
+                    <button class="game-button" id="reset-button">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                    
+                    <button class="game-button" id="print-btn">
+                        <i class="fas fa-download"></i> 下载题目
+                    </button>
+                    
+                    <button class="game-button" id="show-solution-btn">
+                        <i class="fas fa-eye"></i> 查看答案
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 笔记侧边栏 -->
+        <div class="notes-overlay" id="notes-overlay"></div>
+        <div class="notes-sidebar" id="notes-sidebar">
+            <div class="notes-sidebar-header">
+                <span>数独笔记本</span>
+                <div class="sidebar-header-actions">
+                    <button class="download-notes-btn" id="download-notes-btn" title="下载笔记">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="notes-sidebar-close" id="close-notes-sidebar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="notes-sidebar-content">
+                <div class="notes-input-container">
+                    <label for="note-text">添加新笔记</label>
+                    <div class="notes-tools">
+                        <button class="screenshot-btn" id="take-screenshot-btn" title="截取数独题目">
+                            <i class="fas fa-camera"></i> 截图
+                        </button>
+                    </div>
+                    <div id="note-editor" class="note-editor" contenteditable="true"></div>
+                    <div id="screenshot-preview" class="screenshot-preview" style="display: none;">
+                        <div class="screenshot-preview-header">
+                            <span>截图预览</span>
+                            <button class="screenshot-close-btn" id="close-screenshot-btn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="screenshot-preview-content"></div>
+                    </div>
+                </div>
+                
+                <div class="saved-notes-container">
+                    <h3>已保存笔记</h3>
+                    <div class="saved-notes-list" id="saved-notes-list">
+                        <!-- 笔记条目将通过JS动态生成 -->
+                    </div>
+                </div>
+            </div>
+            <div class="notes-sidebar-footer">
+                <button class="clear-btn" id="clear-note-btn">清空</button>
+                <button class="save-note-btn" id="save-note-btn">保存笔记</button>
+            </div>
+        </div>
+        
+        <!-- 下载笔记对话框 -->
+        <div class="download-dialog" id="download-dialog">
+            <div class="download-dialog-content">
+                <div class="download-dialog-header">
+                    <span>下载笔记</span>
+                    <button class="download-dialog-close" id="close-download-dialog">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="download-dialog-body">
+                    <p>请选择要下载的笔记内容：</p>
+                    <div class="download-options">
+                        <div class="download-option" data-option="current">
+                            <div class="download-option-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="download-option-info">
+                                <div class="download-option-title">当前笔记</div>
+                                <div class="download-option-desc">仅导出当前数独题目的笔记</div>
+                            </div>
+                        </div>
+                        <div class="download-option" data-option="all">
+                            <div class="download-option-icon">
+                                <i class="fas fa-file-archive"></i>
+                            </div>
+                            <div class="download-option-info">
+                                <div class="download-option-title">所有笔记</div>
+                                <div class="download-option-desc">导出所有数独题目的笔记</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="download-dialog-footer">
+                    <button class="download-cancel-btn" id="download-cancel-btn">取消</button>
+                    <button class="download-confirm-btn" id="download-confirm-btn">下载</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 禁用悬浮球功能的脚本 -->
+    <script>
+        // 确保悬浮球相关元素不会显示或被激活
+        document.addEventListener('DOMContentLoaded', function() {
+            // 查找并隐藏可能存在的悬浮球元素
+            const floatingBalls = document.querySelectorAll('.floating-ball');
+            if (floatingBalls.length > 0) {
+                floatingBalls.forEach(ball => {
+                    ball.style.display = 'none';
+                    ball.style.pointerEvents = 'none';
+                });
+            }
+            
+            // 查找并隐藏可能存在的遮罩层
+            const overlays = document.querySelectorAll('.overlay');
+            if (overlays.length > 0) {
+                overlays.forEach(overlay => {
+                    overlay.style.display = 'none';
+                });
+            }
+            
+            // 查找并隐藏可能存在的侧边栏
+            const aiPanels = document.querySelectorAll('.sidebar, .ai-panel');
+            if (aiPanels.length > 0) {
+                aiPanels.forEach(panel => {
+                    panel.style.display = 'none';
+                });
+            }
+            
+            // 初始化笔记侧边栏功能
+            initNotesFeature();
+        });
+        
+        // 笔记侧边栏功能初始化
+        function initNotesFeature() {
+            const toggleBtn = document.getElementById('toggle-notes-sidebar');
+            const closeBtn = document.getElementById('close-notes-sidebar');
+            const sidebar = document.getElementById('notes-sidebar');
+            const overlay = document.getElementById('notes-overlay');
+            const saveBtn = document.getElementById('save-note-btn');
+            const clearBtn = document.getElementById('clear-note-btn');
+            const noteEditor = document.getElementById('note-editor');
+            const notesList = document.getElementById('saved-notes-list');
+            
+            // 截图功能相关元素
+            const screenshotBtn = document.getElementById('take-screenshot-btn');
+            const screenshotPreview = document.getElementById('screenshot-preview');
+            const closeScreenshotBtn = document.getElementById('close-screenshot-btn');
+            const screenshotContent = document.querySelector('.screenshot-preview-content');
+            
+            // 下载笔记相关元素
+            const downloadBtn = document.getElementById('download-notes-btn');
+            const downloadDialog = document.getElementById('download-dialog');
+            const closeDownloadBtn = document.getElementById('close-download-dialog');
+            const downloadOptions = document.querySelectorAll('.download-option');
+            const downloadCancelBtn = document.getElementById('download-cancel-btn');
+            const downloadConfirmBtn = document.getElementById('download-confirm-btn');
+            let selectedDownloadOption = 'current'; // 默认下载当前笔记
+            
+            // 获取当前数独ID
+            const puzzleId = document.querySelector('.puzzle-id').textContent.replace('ID: ', '');
+            
+            // 从本地存储加载笔记
+            loadNotes();
+            
+            // 切换侧边栏显示/隐藏
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            // 关闭侧边栏
+            closeBtn.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // 点击遮罩层关闭侧边栏
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // 保存笔记
+            saveBtn.addEventListener('click', () => {
+                const noteContent = noteEditor.innerHTML.trim();
+                if (noteContent === '') return;
+                
+                const notes = getNotes();
+                const now = new Date();
+                const noteId = 'note_' + now.getTime();
+                
+                notes.push({
+                    id: noteId,
+                    puzzleId: puzzleId,
+                    content: noteContent,
+                    date: now.toISOString(),
+                    dateFormatted: formatDate(now)
+                });
+                
+                // 保存到本地存储
+                localStorage.setItem('sudoku_notes', JSON.stringify(notes));
+                
+                // 重新加载笔记列表
+                loadNotes();
+                
+                // 清空输入
+                noteEditor.innerHTML = '';
+            });
+            
+            // 清空输入
+            clearBtn.addEventListener('click', () => {
+                noteEditor.innerHTML = '';
+            });
+            
+            // 获取所有笔记
+            function getNotes() {
+                try {
+                    const notesStr = localStorage.getItem('sudoku_notes');
+                    if (!notesStr) return [];
+                    
+                    const parsed = JSON.parse(notesStr);
+                    // 确保返回的是数组
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch (error) {
+                    console.error('笔记加载出错:', error);
+                    return [];
+                }
+            }
+            
+            // 加载笔记列表
+            function loadNotes() {
+                const notes = getNotes();
+                
+                // 确保notes是数组
+                if (!Array.isArray(notes)) {
+                    notesList.innerHTML = '<p class="empty-notes-message">暂无笔记。添加一些笔记来帮助你解题吧！</p>';
+                    return;
+                }
+                
+                const filteredNotes = notes.filter(note => note.puzzleId === puzzleId);
+                
+                notesList.innerHTML = '';
+                
+                if (filteredNotes.length === 0) {
+                    notesList.innerHTML = '<p class="empty-notes-message">暂无笔记。添加一些笔记来帮助你解题吧！</p>';
+                    return;
+                }
+                
+                filteredNotes.forEach(note => {
+                    const noteEl = document.createElement('div');
+                    noteEl.className = 'note-item';
+                    noteEl.innerHTML = `
+                        <div class="note-date">${note.dateFormatted}</div>
+                        <div class="note-content">${note.content || escapeHtml(note.text || '')}</div>
+                        <div class="note-actions">
+                            <button class="note-edit-btn" data-id="${note.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="note-delete-btn" data-id="${note.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+            </div>
+                    `;
+                    
+                    notesList.appendChild(noteEl);
+                });
+                
+                // 添加删除笔记功能
+                document.querySelectorAll('.note-delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const noteId = e.currentTarget.dataset.id;
+                        deleteNote(noteId);
+                    });
+                });
+                
+                // 添加编辑笔记功能
+                document.querySelectorAll('.note-edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const noteId = e.currentTarget.dataset.id;
+                        editNote(noteId);
+                    });
+                });
+            }
+            
+            // 删除笔记
+            function deleteNote(noteId) {
+                if (!confirm('确定要删除这条笔记吗？')) return;
+                
+                const notes = getNotes();
+                const updatedNotes = notes.filter(note => note.id !== noteId);
+                
+                localStorage.setItem('sudoku_notes', JSON.stringify(updatedNotes));
+                loadNotes();
+            }
+            
+            // 编辑笔记
+            function editNote(noteId) {
+                const notes = getNotes();
+                const note = notes.find(note => note.id === noteId);
+                
+                if (!note) return;
+                
+                // 将笔记内容加载到编辑器中
+                if (note.content) {
+                    noteEditor.innerHTML = note.content;
+                } else if (note.text) {
+                    noteEditor.textContent = note.text;
+                }
+                
+                noteEditor.focus();
+                
+                // 删除原笔记并在保存时创建新的
+                const updatedNotes = notes.filter(note => note.id !== noteId);
+                localStorage.setItem('sudoku_notes', JSON.stringify(updatedNotes));
+                loadNotes();
+            }
+            
+            // 格式化日期
+            function formatDate(date) {
+                return `${date.getFullYear()}-${padZero(date.getMonth() + 1)}-${padZero(date.getDate())} ${padZero(date.getHours())}:${padZero(date.getMinutes())}`;
+            }
+            
+            // 数字前补零
+            function padZero(num) {
+                return num < 10 ? '0' + num : num;
+            }
+            
+            // HTML转义，防止XSS攻击
+            function escapeHtml(html) {
+                const div = document.createElement('div');
+                div.textContent = html;
+                return div.innerHTML;
+            }
+            
+            // 截图功能
+            screenshotBtn.addEventListener('click', takeScreenshot);
+            
+            // 关闭截图预览
+            closeScreenshotBtn.addEventListener('click', () => {
+                screenshotPreview.style.display = 'none';
+            });
+            
+            // 截取数独题目的函数
+            function takeScreenshot() {
+                // 获取数独网格元素
+                const sudokuGrid = document.getElementById('classic-grid');
+                
+                if (!sudokuGrid) {
+                    alert('无法找到数独网格元素');
+                    return;
+                }
+                
+                // 使用html2canvas生成截图
+                html2canvas(sudokuGrid, {
+                    backgroundColor: null,
+                    scale: 2, // 提高截图质量
+                    logging: false
+                }).then(canvas => {
+                    // 将Canvas转为图片URL
+                    const imageUrl = canvas.toDataURL('image/png');
+                    
+                    // 显示截图预览
+                    screenshotContent.innerHTML = `
+                        <img src="${imageUrl}" alt="数独截图">
+                        <div class="screenshot-actions">
+                            <button class="insert-screenshot-btn" id="insert-screenshot-btn">
+                                <i class="fas fa-plus"></i> 插入到笔记
+                            </button>
+                            <button class="download-screenshot-btn" id="download-screenshot-btn">
+                                <i class="fas fa-download"></i> 下载截图
+                            </button>
+            </div>
+                    `;
+                    
+                    // 显示预览区域
+                    screenshotPreview.style.display = 'block';
+                    
+                    // 添加插入截图到笔记的事件 - 以图片形式插入
+                    document.getElementById('insert-screenshot-btn').addEventListener('click', () => {
+                        // 将图片直接插入到富文本编辑器中
+                        const timestamp = new Date().toLocaleTimeString();
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imageUrl;
+                        imgElement.alt = `数独截图 ${timestamp}`;
+                        imgElement.title = `数独截图 ${timestamp}`;
+                        
+                        // 插入图片到编辑器中
+                        noteEditor.focus();
+                        // 如果编辑器已有内容，在末尾添加换行后再添加图片
+                        if (noteEditor.innerHTML.trim() !== '') {
+                            // 确保在末尾有两个换行再添加图片
+                            if (!noteEditor.innerHTML.endsWith('<br><br>')) {
+                                if (noteEditor.innerHTML.endsWith('<br>')) {
+                                    noteEditor.innerHTML += '<br>';
+                                } else {
+                                    noteEditor.innerHTML += '<br><br>';
+                                }
+                            }
+                        }
+                        
+                        // 将光标移到末尾并插入图片
+                        const selection = window.getSelection();
+                        const range = document.createRange();
+                        range.selectNodeContents(noteEditor);
+                        range.collapse(false); // 将光标移到末尾
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        
+                        // 插入图片
+                        noteEditor.appendChild(imgElement);
+                        
+                        // 保存截图到本地存储
+                        saveScreenshot(imageUrl, timestamp);
+                        
+                        // 关闭预览
+                        screenshotPreview.style.display = 'none';
+                    });
+                    
+                    // 添加下载截图的事件
+                    document.getElementById('download-screenshot-btn').addEventListener('click', () => {
+                        // 创建下载链接
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = imageUrl;
+                        downloadLink.download = `数独截图_${puzzleId}_${new Date().getTime()}.png`;
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                    });
+                }).catch(error => {
+                    console.error('截图生成失败：', error);
+                    alert('截图生成失败，请重试');
+                });
+            }
+            
+            // 保存截图到本地存储
+            function saveScreenshot(imageUrl, timestamp) {
+                // 获取已有的截图数据
+                let screenshots = JSON.parse(localStorage.getItem('sudoku_screenshots') || '{}');
+                
+                // 为当前题目创建数组（如果不存在）
+                if (!screenshots[puzzleId]) {
+                    screenshots[puzzleId] = [];
+                }
+                
+                // 添加新截图
+                screenshots[puzzleId].push({
+                    id: 'screenshot_' + new Date().getTime(),
+                    url: imageUrl,
+                    timestamp: timestamp,
+                    date: new Date().toISOString()
+                });
+                
+                // 保存回本地存储
+                localStorage.setItem('sudoku_screenshots', JSON.stringify(screenshots));
+            }
+            
+            // 下载笔记功能
+            downloadBtn.addEventListener('click', openDownloadDialog);
+            closeDownloadBtn.addEventListener('click', closeDownloadDialog);
+            downloadCancelBtn.addEventListener('click', closeDownloadDialog);
+            downloadConfirmBtn.addEventListener('click', downloadNotes);
+            
+            // 下载选项选择
+            downloadOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // 移除所有选项的active类
+                    downloadOptions.forEach(opt => opt.classList.remove('active'));
+                    // 添加当前选项的active类
+                    option.classList.add('active');
+                    // 设置选中的选项
+                    selectedDownloadOption = option.dataset.option;
+                });
+            });
+            
+            // 打开下载对话框
+            function openDownloadDialog() {
+                downloadDialog.classList.add('active');
+                // 默认选中第一个选项
+                downloadOptions[0].classList.add('active');
+                selectedDownloadOption = 'current';
+            }
+            
+            // 关闭下载对话框
+            function closeDownloadDialog() {
+                downloadDialog.classList.remove('active');
+            }
+            
+            // 下载笔记
+            function downloadNotes() {
+                const allNotes = getNotes();
+                let notesToDownload = [];
+                let filename = '';
+                
+                if (selectedDownloadOption === 'current') {
+                    // 只下载当前题目的笔记
+                    notesToDownload = allNotes.filter(note => note.puzzleId === puzzleId);
+                    filename = `数独笔记_${puzzleId}_${formatDateForFilename(new Date())}.html`;
+                } else {
+                    // 下载所有笔记
+                    notesToDownload = allNotes;
+                    filename = `所有数独笔记_${formatDateForFilename(new Date())}.html`;
+                }
+                
+                if (notesToDownload.length === 0) {
+                    alert('没有可下载的笔记！');
+                    closeDownloadDialog();
+                    return;
+                }
+                
+                // 生成HTML内容
+                const htmlContent = generateNotesHtml(notesToDownload);
+                
+                // 创建Blob并下载
+                const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // 释放URL对象
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                closeDownloadDialog();
+            }
+            
+            // 生成笔记HTML
+            function generateNotesHtml(notes) {
+                // 按题目ID分组笔记
+                const groupedNotes = {};
+                notes.forEach(note => {
+                    if (!groupedNotes[note.puzzleId]) {
+                        groupedNotes[note.puzzleId] = [];
+                    }
+                    groupedNotes[note.puzzleId].push(note);
+                });
+                
+                let html = `
+                <!DOCTYPE html>
+                <html lang="zh-CN">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>数独笔记</title>
+                    <style>
+                        body {
+                            font-family: 'Microsoft YaHei', Arial, sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            max-width: 800px;
+                            margin: 0 auto;
+                            padding: 20px;
+                        }
+                        h1 {
+                            text-align: center;
+                            color: #2563eb;
+                            margin-bottom: 30px;
+                        }
+                        .puzzle-section {
+                            margin-bottom: 40px;
+                            border: 1px solid #eee;
+                            border-radius: 8px;
+                            overflow: hidden;
+                        }
+                        .puzzle-header {
+                            background-color: #f1f5f9;
+                            padding: 15px;
+                            border-bottom: 1px solid #eee;
+                        }
+                        .puzzle-id {
+                            font-weight: bold;
+                            font-size: 18px;
+                            color: #2563eb;
+                        }
+                        .notes-container {
+                            padding: 0 15px;
+                        }
+                        .note-item {
+                            margin: 20px 0;
+                            padding: 15px;
+                            background-color: #f8f9fa;
+                            border-radius: l 5px;
+                        }
+                        .note-date {
+                            font-size: 12px;
+                            color: #777;
+                            margin-bottom: 8px;
+                        }
+                        .note-content {
+                            font-size: 14px;
+                        }
+                        .note-content img {
+                            max-width: 100%;
+                            height: auto;
+                            margin: 10px 0;
+                            border: 1px solid #eee;
+                            border-radius: 5px;
+                        }
+                        .footer {
+                            text-align: center;
+                            margin-top: 30px;
+                            font-size: 12px;
+                            color: #777;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>数独笔记</h1>
+                `;
+                
+                // 添加每个题目的笔记
+                Object.keys(groupedNotes).forEach(puzzleId => {
+                    const puzzleNotes = groupedNotes[puzzleId];
+                    
+                    html += `
+                    <div class="puzzle-section">
+                        <div class="puzzle-header">
+                            <div class="puzzle-id">题目ID: ${puzzleId}</div>
+        </div>
+                        <div class="notes-container">
+                    `;
+                    
+                    // 添加该题目的所有笔记
+                    puzzleNotes.forEach(note => {
+                        html += `
+                        <div class="note-item">
+                            <div class="note-date">${note.dateFormatted}</div>
+                            <div class="note-content">
+                                ${note.content || escapeHtml(note.text || '')}
+                            </div>
+                        </div>
+                        `;
+                    });
+                    
+                    html += `
+                        </div>
+                    </div>
+                    `;
+                });
+                
+                html += `
+                    <div class="footer">
+                        <p>由数独学堂生成 - ${new Date().toLocaleDateString()}</p>
+                    </div>
+                </body>
+                </html>
+                `;
+                
+                return html;
+            }
+            
+            // 格式化日期用于文件名
+            function formatDateForFilename(date) {
+                return `${date.getFullYear()}${padZero(date.getMonth() + 1)}${padZero(date.getDate())}_${padZero(date.getHours())}${padZero(date.getMinutes())}`;
+            }
+        }
+    </script>
+    
+    <!-- 引入JavaScript文件 -->
+    <script src="../js/classic-mode.js"></script>
+    <!-- 引入打印和下载相关库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 引入打印功能 -->
+    <script src="../js/print-sudoku.js"></script>
+    <!-- 引入查看答案功能 -->
+    <script src="../js/show-solution.js"></script>
+    
+    <!-- 自定义题目功能脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化变量
+            const createCustomBtn = document.getElementById('create-custom-btn');
+            const customPuzzlesCounter = document.getElementById('custom-puzzles-counter');
+
+            // 更新自定义题目计数
+            function updateCustomPuzzlesCount() {
+                const customPuzzles = JSON.parse(localStorage.getItem('custom_puzzles') || '{}');
+                const count = Object.keys(customPuzzles).length;
+                customPuzzlesCounter.textContent = count;
+            }
+
+            // 初始化时更新计数
+            updateCustomPuzzlesCount();
+
+            // 创建自定义题目按钮点击事件
+            createCustomBtn.addEventListener('click', () => {
+                window.location.href = 'custom-puzzle.html';
+            });
+
+            // 加载自定义题目
+            function loadCustomPuzzles() {
+                const customPuzzles = JSON.parse(localStorage.getItem('custom_puzzles') || '{}');
+                const puzzleList = document.getElementById('puzzle-list');
+                
+                // 清空现有列表
+                puzzleList.innerHTML = '';
+                
+                // 添加自定义题目到列表
+                Object.entries(customPuzzles).forEach(([id, puzzle]) => {
+                    const difficultyStars = '★'.repeat(puzzle.difficulty) + '☆'.repeat(5 - puzzle.difficulty);
+                    const date = new Date(puzzle.date).toLocaleDateString();
+                    
+                    const puzzleItem = document.createElement('div');
+                    puzzleItem.className = 'puzzle-list-item';
+                    puzzleItem.innerHTML = `
+                        <div class="puzzle-item-header">
+                            <span class="puzzle-item-id">${id}</span>
+                            <span class="puzzle-item-difficulty">${difficultyStars}</span>
+                        </div>
+                        <div class="puzzle-item-title">
+                            <span class="title-text">${puzzle.name || '未命名题目'}</span>
+                            <button class="btn-small btn-edit-name" data-id="${id}" title="编辑题目名称">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <div class="puzzle-item-description">
+                            创建于 ${date}
+                        </div>
+                        <div class="puzzle-item-actions">
+                            <button class="btn-small btn-play" data-id="${id}">开始</button>
+                            <button class="btn-small btn-delete" data-id="${id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    puzzleList.appendChild(puzzleItem);
+                });
+                
+                // 添加编辑名称按钮事件
+                document.querySelectorAll('.btn-edit-name').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = btn.dataset.id;
+                        const customPuzzles = JSON.parse(localStorage.getItem('custom_puzzles') || '{}');
+                        const puzzle = customPuzzles[id];
+                        const titleText = btn.closest('.puzzle-item-title').querySelector('.title-text');
+                        const currentName = puzzle.name || '未命名题目';
+                        
+                        // 创建编辑输入框
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.value = currentName;
+                        input.className = 'title-edit-input';
+                        input.maxLength = 50;
+                        
+                        // 替换文本为输入框
+                        titleText.style.display = 'none';
+                        titleText.parentNode.insertBefore(input, titleText);
+                        input.focus();
+                        
+                        // 保存编辑
+                        function saveEdit() {
+                            const newName = input.value.trim();
+                            if (newName) {
+                                puzzle.name = newName;
+                                customPuzzles[id] = puzzle;
+                                localStorage.setItem('custom_puzzles', JSON.stringify(customPuzzles));
+                                titleText.textContent = newName;
+                            }
+                            input.remove();
+                            titleText.style.display = 'inline';
+                        }
+                        
+                        // 处理回车和失焦事件
+                        input.addEventListener('keypress', (e) => {
+                            if (e.key === 'Enter') {
+                                saveEdit();
+                            }
+                        });
+                        
+                        input.addEventListener('blur', saveEdit);
+                    });
+                });
+                
+                // 添加删除按钮事件
+                document.querySelectorAll('.btn-delete').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = btn.dataset.id;
+                        if (confirm('确定要删除这个题目吗？')) {
+                            const customPuzzles = JSON.parse(localStorage.getItem('custom_puzzles') || '{}');
+                            delete customPuzzles[id];
+                            localStorage.setItem('custom_puzzles', JSON.stringify(customPuzzles));
+                            loadCustomPuzzles();
+                            updateCustomPuzzlesCount();
+                        }
+                    });
+                });
+                
+                // 添加开始按钮事件
+                document.querySelectorAll('.btn-play').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.dataset.id;
+                        const customPuzzles = JSON.parse(localStorage.getItem('custom_puzzles') || '{}');
+                        const puzzle = customPuzzles[id];
+                        if (puzzle) {
+                            // 加载题目到游戏网格
+                            loadPuzzle(puzzle.grid);
+                            // 更新题目信息
+                            document.querySelector('.puzzle-id').textContent = `ID: ${id}`;
+                            const difficultyStars = '★'.repeat(puzzle.difficulty) + '☆'.repeat(5 - puzzle.difficulty);
+                            document.querySelector('.difficulty-stars').textContent = difficultyStars;
+                            // 滚动到数独盘
+                            document.querySelector('.sudoku-grid').scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
+                });
+            }
+
+            // 当切换到"用户生成"分类时加载自定义题目
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    // 移除其他分类的active类
+                    document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+                    // 添加当前分类的active类
+                    item.classList.add('active');
+                    
+                    const isCustomCategory = item.querySelector('i').classList.contains('fa-user-edit');
+                    if (isCustomCategory) {
+                        loadCustomPuzzles();
+                    }
+                });
+            });
+
+            // 加载题目到游戏网格
+            function loadPuzzle(puzzleGrid) {
+                const cells = document.querySelectorAll('.sudoku-cell');
+                cells.forEach((cell, index) => {
+                    const number = puzzleGrid[index];
+                    if (number !== 0) {
+                        cell.textContent = number;
+                        cell.classList.add('initial');
+                    } else {
+                        cell.textContent = '';
+                        cell.classList.remove('initial');
+                    }
+                });
+            }
+        });
+    </script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="../css/floating-ball.css">
+    <script src="../js/floating-ball.js"></script>
+    <!-- 页面脚本 -->
+    <script src="../js/sudoku.js"></script>
+</body>
+</html> 

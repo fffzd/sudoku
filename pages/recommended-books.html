@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>名著推荐 - 数独学堂</title>
+    <meta name="description" content="数独学堂精选推荐的数独书籍，包括入门指南、技巧解析、谜题精选等多种类型，助您从入门到精通。">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 书籍推荐页面特定样式 -->
+    <style>
+        /* 书籍展示区布局 */
+        .books-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+        
+        /* 书籍卡片样式 */
+        .book-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .book-cover {
+            position: relative;
+            padding-top: 140%; /* 长宽比约7:10，符合书籍封面比例 */
+            overflow: hidden;
+            background-color: var(--bg-secondary);
+        }
+        
+        .book-cover img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .book-card:hover .book-cover img {
+            transform: scale(1.05);
+        }
+        
+        .book-rating {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(76, 157, 243, 0.8);
+            color: #000000;
+            padding: 3px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .book-rating i {
+            color: #ffc107;
+            margin-right: 5px;
+        }
+        
+        .book-info {
+            padding: var(--spacing-md);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .book-title {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .book-author {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+            font-style: italic;
+        }
+        
+        .book-desc {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.9rem;
+            flex-grow: 1;
+        }
+        
+        .book-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .book-tag {
+            background-color: #e6f0fd;
+            padding: 3px 8px;
+            font-size: 0.8rem;
+            border-radius: 10px;
+            color: #333333;
+        }
+        
+        .book-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .book-actions a {
+            text-decoration: none;
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* 隐藏价格文本 */
+        .book-price {
+            display: none;
+        }
+        
+        /* 隐藏书籍评分显示 */
+        .book-rating {
+            display: none !important;
+        }
+        
+        /* 分类标签 */
+        .category-section {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+            border-bottom: 2px solid #4C9DF3;
+            padding-bottom: var(--spacing-sm);
+        }
+        
+        .category-desc {
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-secondary);
+        }
+        
+        /* 分类介绍样式 */
+        .category-intro {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .category-intro h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .category-intro p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.6;
+        }
+        
+        .category-info {
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: var(--bg-primary);
+            border-left: 4px solid #4C9DF3;
+            border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+        }
+        
+        .category-info h4 {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .category-info p {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+        
+        /* 滑动卡片 */
+        .featured-books {
+            position: relative;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg) 0;
+        }
+        
+        .featured-title {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+        
+        .book-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: var(--spacing-md) 0;
+            gap: var(--spacing-lg);
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .book-slider::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .slider-item {
+            flex: 0 0 280px;
+        }
+        
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .slider-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .slider-btn:hover {
+            background-color: #4C9DF3;
+            color: #000000;
+        }
+        
+        /* 推荐格言 */
+        .book-quote {
+            font-style: italic;
+            text-align: center;
+            max-width: 800px;
+            margin: var(--spacing-xl) auto;
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--secondary-color);
+            border-bottom: 1px solid var(--secondary-color);
+            color: var(--text-secondary);
+        }
+        
+        .quote-text {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .quote-author {
+            font-size: 0.9rem;
+        }
+        
+        /* 按钮颜色样式修改 */
+        .btn-primary {
+            background-color: #4C9DF3;
+            color: #000000;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a7fc5;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .books-display {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .slider-item {
+                flex: 0 0 250px;
+            }
+        }
+        
+        /* 添加导航栏样式覆盖 */
+        nav a.active, nav a:hover {
+            background-color: transparent;
+            color: #FFB74D;
+        }
+        
+        /* Logo样式覆盖 */
+        .logo span {
+            color: white;
+        }
+        
+        /* 书籍标签覆盖 */
+        .book-tag {
+            background-color: #e6f0fd;
+            color: #333333;
+        }
+        
+        /* 书籍评分背景修改 */
+        .book-rating {
+            background-color: rgba(76, 157, 243, 0.8);
+            color: #000000;
+        }
+        
+        /* 按钮样式 */
+        .btn-buy {
+            background-color: #4C9DF3;
+            color: #000000;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-buy:hover {
+            background-color: #3a7fc5;
+        }
+        
+        /* 页脚样式覆盖 */
+        footer {
+            background-color: #f5f5f5;
+            color: #333333;
+        }
+        
+        footer a {
+            color: #4C9DF3;
+        }
+        
+        footer a:hover {
+            color: #3a7fc5;
+        }
+        
+        /* 页面标题覆盖 */
+        .page-title {
+            color: #4C9DF3;
+        }
+        
+        /* 分类介绍样式提升优先级 */
+        .category-intro {
+            background-color: #f5f8fd !important;
+        }
+        
+        /* 确保所有按钮都使用新的颜色 */
+        .btn, 
+        .btn-primary, 
+        button,
+        input[type="submit"],
+        input[type="button"] {
+            background-color: #4C9DF3 !important;
+            color: #000000 !important;
+        }
+        
+        .btn:hover, 
+        .btn-primary:hover, 
+        button:hover,
+        input[type="submit"]:hover,
+        input[type="button"]:hover {
+            background-color: #3a7fc5 !important;
+        }
+        
+        /* 确保评分星星颜色 */
+        .book-rating i {
+            color: #FFD700 !important;
+        }
+        
+        /* 页面所有的强调色 */
+        .accent-color,
+        .highlight-text,
+        .featured-highlight {
+            color: #4C9DF3 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="../index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">精选推荐 - 数独解谜之旅</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="../index.html">首页</a>
+                    <a href="daily-challenge.html">每日挑战</a>
+                    <a href="classic-mode.html">经典模式</a>
+                    <a href="learning-center.html">学习中心</a>
+                    <a href="#" class="active">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="container">
+        <h1 class="page-title">数独图书精选推荐</h1>
+        <p class="page-desc">从入门指南到高级解法，我们精选了最具价值的数独相关书籍，帮助您系统学习数独技巧，提升解题能力。</p>
+        
+        <!-- 筛选区域替换为分类介绍 -->
+        <div class="category-intro">
+            <h3>数独书籍分类指南</h3>
+            <p>数独书籍主要分为以下几类，您可以根据自己的需求和水平选择合适的书籍：</p>
+            
+            <div class="category-info">
+                <h4>入门教程</h4>
+                <p>适合数独初学者，内容包括数独基本规则、入门技巧和简单难度的练习题。这类书籍通常配有详细的解题步骤说明，帮助新手建立解题思路和信心。</p>
+            </div>
+            
+            <div class="category-info">
+                <h4>技巧解析</h4>
+                <p>面向已掌握基础的数独爱好者，详细讲解各种解题技巧，如唯一数法、隐性对子、XY-Wing等。这些书籍通常包含大量图解和实例，帮助读者突破解题瓶颈。</p>
+            </div>
+            
+            <div class="category-info">
+                <h4>谜题集</h4>
+                <p>收录大量不同难度的数独谜题，从简单到专家级，满足各水平玩家的需求。这类书籍特点是题量丰富，有的还会按主题或技巧分类，方便有针对性地练习。</p>
+            </div>
+            
+            <div class="category-info">
+                <h4>高级进阶</h4>
+                <p>专为数独高手设计，介绍复杂的解题策略和思维方法，包含难度极高的挑战题。这类书籍适合已经熟练掌握基础和中级技巧的玩家进一步提升水平。</p>
+            </div>
+        </div>
+        
+        <!-- 精选推荐区 -->
+        <section class="featured-books">
+            <h2 class="featured-title">编辑推荐</h2>
+            <div class="book-slider" id="featured-slider">
+                <!-- 精选书籍1 -->
+                <div class="slider-item">
+                    <div class="book-card" data-category="featured" data-difficulty="easy" data-rating="4.9" data-author="王大伟">
+                        <div class="book-cover">
+                            <img src="../images/数独大师.jpg" alt="数独大师">
+                            <div class="book-rating"><i class="fas fa-star"></i>4.9</div>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">数独大师</h3>
+                            <p class="book-author">作者：王大伟</p>
+                            <div class="book-tags">
+                                <span class="book-tag">入门</span>
+                                <span class="book-tag">基础技巧</span>
+                            </div>
+                            <p class="book-desc">专为数独爱好者打造的进阶指南，内含200道精选数独题目，从基础到进阶，循序渐进提升解题能力，是数独爱好者的必备参考书。</p>
+                            <div class="book-actions">
+                                <a href="#" class="btn btn-primary">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 精选书籍2 -->
+                <div class="slider-item">
+                    <div class="book-card" data-category="featured" data-difficulty="hard" data-rating="4.8" data-author="过往光年">
+                        <div class="book-cover">
+                            <img src="../images/数独入门技巧解题与练习.jpg" alt="数独入门：技巧、解题与练习">
+                            <div class="book-rating"><i class="fas fa-star"></i>4.8</div>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">数独入门：技巧、解题与练习</h3>
+                            <p class="book-author">作者：过往光年</p>
+                            <div class="book-tags">
+                                <span class="book-tag">高级</span>
+                                <span class="book-tag">进阶技巧</span>
+                            </div>
+                            <p class="book-desc">详细讲解X-Wing、XY-Wing等进阶解题技巧，通过实例分析帮助读者掌握难度较高的数独挑战方法，适合中级玩家提升。</p>
+                            <div class="book-actions">
+                                <a href="https://www.amazon.cn/dp/B09LV7XY5Y" class="btn btn-primary">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 精选书籍3 -->
+                <div class="slider-item">
+                    <div class="book-card" data-category="featured" data-difficulty="medium" data-rating="4.7" data-author="宋闯">
+                        <div class="book-cover">
+                            <img src="../images/数独入门级.jpg" alt="数独（入门级）">
+                            <div class="book-rating"><i class="fas fa-star"></i>4.7</div>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">数独（入门级）</h3>
+                            <p class="book-author">作者：宋闯</p>
+                            <div class="book-tags">
+                                <span class="book-tag">谜题集</span>
+                                <span class="book-tag">多难度</span>
+                            </div>
+                            <p class="book-desc">收录365个精心设计的数独谜题，难度从简单到中级，每天一题，全年挑战不停，由中国铁道出版社出版的经典数独题集。</p>
+                            <div class="book-actions">
+                                <a href="https://www.amazon.cn/dp/7113103324" class="btn btn-primary">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 精选书籍4 -->
+                <div class="slider-item">
+                    <div class="book-card" data-category="featured" data-difficulty="medium" data-rating="4.6" data-author="西尾彻也">
+                        <div class="book-cover">
+                            <img src="../images/段位数独.jpg" alt="数独挑战">
+                            <div class="book-rating"><i class="fas fa-star"></i>4.6</div>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">数独挑战</h3>
+                            <p class="book-author">作者：西尾彻也</p>
+                            <div class="book-tags">
+                                <span class="book-tag">思维训练</span>
+                                <span class="book-tag">游戏精选</span>
+                            </div>
+                            <p class="book-desc">由日本著名数独制题人西尾彻也精心设计的200多道经典数独题，难度适中，解题过程流畅优美，适合有一定基础的数独爱好者。</p>
+                            <div class="book-actions">
+                                <a href="https://book.douban.com/subject/3288386/" class="btn btn-primary">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 精选书籍5 -->
+                <div class="slider-item">
+                    <div class="book-card" data-category="featured" data-difficulty="hard" data-rating="4.9" data-author="吴长风">
+                        <div class="book-cover">
+                            <img src="../images/标准数独解法完整版.jpg" alt="数独技巧全解">
+                            <div class="book-rating"><i class="fas fa-star"></i>4.9</div>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">数独技巧全解</h3>
+                            <p class="book-author">作者：吴长风</p>
+                            <div class="book-tags">
+                                <span class="book-tag">解题策略</span>
+                                <span class="book-tag">高级技巧</span>
+                            </div>
+                            <p class="book-desc">全面详解数独解题技巧，从基础的唯一数法到高级的X-Wing、XY-Wing等，每种技巧都配有详细图解和实例，适合想深入学习数独技巧的玩家。</p>
+                            <div class="book-actions">
+                                <a href="https://book.douban.com/subject/27157070/" class="btn btn-primary">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 精选书籍6 -->
+                <div class="slider-item">
+                    <div class="book-card" data-category="featured" data-difficulty="hard" data-rating="4.8" data-author="李大伟">
+                        <div class="book-cover">
+                            <img src="../images/数独大师.jpg" alt="数独高手之路">
+                            <div class="book-rating"><i class="fas fa-star"></i>4.8</div>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">数独高手之路</h3>
+                            <p class="book-author">作者：李大伟</p>
+                            <div class="book-tags">
+                                <span class="book-tag">进阶训练</span>
+                                <span class="book-tag">高难度</span>
+                            </div>
+                            <p class="book-desc">专为已掌握基础技巧的数独爱好者设计，着重讲解中级技巧如隐性对子、显性对子、三数组等，帮助玩家突破中级瓶颈，向高手进阶。</p>
+                            <div class="book-actions">
+                                <a href="https://book.douban.com/subject/30183894/" class="btn btn-primary">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <div class="slider-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></div>
+                <div class="slider-btn" id="next-btn"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </section>
+        
+        <!-- 推荐格言 -->
+        <div class="book-quote">
+            <p class="quote-text">"数独不仅是一种游戏，更是一种思维的磨砺。通过数独，我们学会以逻辑化解复杂，以规则构建秩序。"</p>
+            <p class="quote-author">—— 村上春树</p>
+        </div>
+        
+        <!-- 入门书籍分类 -->
+        <section class="category-section" id="beginner-books">
+            <h2 class="category-title">数独入门书籍</h2>
+            <p class="category-desc">为初学者精选的数独入门书籍，从基本规则到入门技巧，循序渐进，轻松入门。</p>
+            
+            <div class="books-display">
+                <!-- 书籍卡片1 -->
+                <div class="book-card" data-category="beginner" data-difficulty="easy" data-rating="4.9" data-author="王大伟">
+                    <div class="book-cover">
+                        <img src="../images/段位数独.jpg" alt="数独大师">
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">数独大师</h3>
+                        <p class="book-author">作者：王大伟</p>
+                        <p class="book-desc">系统全面的数独学习指南，从基础规则到进阶技巧，循序渐进，适合各级别数独爱好者。包含大量实例和清晰的解题思路分析。</p>
+                        <div class="book-meta">
+                            <span class="book-rating"><i class="fas fa-star"></i>4.9</span>
+                            <span class="book-pages"><i class="fas fa-book-open"></i>220页</span>
+                        </div>
+                        <div class="book-actions">
+                            <a href="#" class="btn-buy">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 入门书籍2 -->
+                <div class="book-card" data-category="beginner" data-difficulty="easy" data-rating="4.7" data-author="过往光年">
+                    <div class="book-cover">
+                        <img src="../images/数独入门技巧解题与练习.jpg" alt="数独入门：技巧、解题与练习">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.7</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">数独入门：技巧、解题与练习</h3>
+                        <p class="book-author">作者：过往光年</p>
+                        <div class="book-tags">
+                            <span class="book-tag">入门</span>
+                            <span class="book-tag">练习题</span>
+                        </div>
+                        <p class="book-desc">精选100道入门级数独题，难度由浅入深，每道题都配有详细的解题过程和技巧讲解，是初学者的绝佳练习材料。</p>
+                        <div class="book-actions">
+                            <a href="https://www.amazon.cn/dp/B09LV7XY5Y" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 入门书籍3 -->
+                <div class="book-card" data-category="beginner" data-difficulty="easy" data-rating="4.6" data-author="宋闯">
+                    <div class="book-cover">
+                        <img src="../images/数独入门级.jpg" alt="数独（入门级）">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.6</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">数独（入门级）</h3>
+                        <p class="book-author">作者：宋闯</p>
+                        <div class="book-tags">
+                            <span class="book-tag">基础</span>
+                            <span class="book-tag">系统教程</span>
+                        </div>
+                        <p class="book-desc">由中国铁道出版社出版的数独入门教程，涵盖数独历史、规则、基本解法和常见技巧，附有大量实例和练习题，适合零基础学习。</p>
+                        <div class="book-actions">
+                            <a href="https://www.amazon.cn/dp/7113103324" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 技巧书籍分类 -->
+        <section class="category-section" id="technique-books">
+            <h2 class="category-title">数独技巧解析</h2>
+            <p class="category-desc">详解各种数独解题技巧，从基础到高级，帮助您突破解题瓶颈，提升数独水平。</p>
+            
+            <div class="books-display">
+                <!-- 技巧书籍1 -->
+                <div class="book-card" data-category="technique" data-difficulty="medium" data-rating="4.8" data-author="李学涛">
+                    <div class="book-cover">
+                        <img src="../images/标准数独解法完整版.jpg" alt="数独大师策略篇">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.8</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">数独大师策略篇</h3>
+                        <p class="book-author">作者：李学涛</p>
+                        <div class="book-tags">
+                            <span class="book-tag">解题技巧</span>
+                            <span class="book-tag">全面解析</span>
+                        </div>
+                        <p class="book-desc">深入剖析数独解题策略，包括常用技巧和高级解法，每种技巧配有详细图解和实例，帮助读者有效提升解题效率和技巧运用能力。</p>
+                        <div class="book-actions">
+                            <a href="#" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 技巧书籍2 -->
+                <div class="book-card" data-category="technique" data-difficulty="medium" data-rating="4.7" data-author="陈明亮">
+                    <div class="book-cover">
+                        <img src="../images/段位数独.jpg" alt="数独进阶宝典">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.7</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">数独进阶宝典</h3>
+                        <p class="book-author">作者：陈明亮</p>
+                        <div class="book-tags">
+                            <span class="book-tag">中级</span>
+                            <span class="book-tag">进阶技巧</span>
+                        </div>
+                        <p class="book-desc">为已掌握基础的数独玩家提供进阶指导，详细讲解各种中级技巧的应用，配有解题步骤分析和实战演练，帮助读者突破解题瓶颈。</p>
+                        <div class="book-actions">
+                            <a href="#" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 技巧书籍3 -->
+                <div class="book-card" data-category="technique" data-difficulty="hard" data-rating="4.9" data-author="王远征">
+                    <div class="book-cover">
+                        <img src="../images/数独从入门到精通.jpg" alt="数独从入门到精通">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.9</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">数独从入门到精通</h3>
+                        <p class="book-author">作者：张佳音</p>
+                        <div class="book-tags">
+                            <span class="book-tag">思维方法</span>
+                            <span class="book-tag">解题策略</span>
+                        </div>
+                        <p class="book-desc">从思维角度解析数独解题策略，教您如何建立系统化的解题思路，高效解决各种难度的数独谜题，循序渐进提升解题能力。</p>
+                        <div class="book-actions">
+                            <a href="https://book.douban.com/subject/10603860/" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 数独谜题集分类 -->
+        <section class="category-section" id="puzzle-books">
+            <h2 class="category-title">数独谜题集</h2>
+            <p class="category-desc">精选各种难度的数独谜题集，丰富多样，挑战不断，满足不同水平玩家的需求。</p>
+            
+            <div class="books-display">
+                <!-- 谜题集1 -->
+                <div class="book-card" data-category="puzzle" data-difficulty="medium" data-rating="4.5" data-author="中国数独发展总部">
+                    <div class="book-cover">
+                        <img src="../images/标准数独解法一体通.jpg" alt="标准数独解法一本通">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.5</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">标准数独解法一本通</h3>
+                        <p class="book-author">作者：北京市数独运动协会</p>
+                        <div class="book-tags">
+                            <span class="book-tag">谜题集</span>
+                            <span class="book-tag">多难度</span>
+                        </div>
+                        <p class="book-desc">由北京市数独运动协会编著，收录精心挑选的标准数独谜题，难度从简单到专家级，满足不同水平玩家的需求，并提供系统的解题方法。</p>
+                        <div class="book-actions">
+                            <a href="https://book.douban.com/subject/35170154/" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 谜题集2 -->
+                <div class="book-card" data-category="puzzle" data-difficulty="easy" data-rating="4.6" data-author="千寻智力">
+                    <div class="book-cover">
+                        <img src="../images/千寻智力 门萨趣味谜题·杀手数独.jpg" alt="门萨趣味谜题·杀手数独">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.6</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">门萨趣味谜题·杀手数独</h3>
+                        <p class="book-author">作者：千寻智力</p>
+                        <div class="book-tags">
+                            <span class="book-tag">经典谜题</span>
+                            <span class="book-tag">中等难度</span>
+                        </div>
+                        <p class="book-desc">精选的200道数独谜题，难度适中，解题过程流畅，适合有一定基础的数独爱好者练习。包含部分题目的详细解析，帮助提升解题思路。</p>
+                        <div class="book-actions">
+                            <a href="#" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 谜题集3 -->
+                <div class="book-card" data-category="puzzle" data-difficulty="hard" data-rating="4.8" data-author="梁跃">
+                    <div class="book-cover">
+                        <img src="../images/六宫变形数独.jpg" alt="六宫变型数独全集">
+                        <div class="book-rating"><i class="fas fa-star"></i>4.8</div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">六宫变型数独全集</h3>
+                        <p class="book-author">作者：北京广播电视台数独发展总部</p>
+                        <div class="book-tags">
+                            <span class="book-tag">高难度</span>
+                            <span class="book-tag">变型数独</span>
+                        </div>
+                        <p class="book-desc">收录300道变型数独谜题，专为高水平玩家设计，包含对角线数独、锯齿数独等多种变型，需要运用多种高级技巧才能解出，真正的数独挑战者必备。</p>
+                        <div class="book-actions">
+                            <a href="https://book.douban.com/subject/26905099/" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 页面底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="quote-carousel">
+                <p>"书籍是人类进步的阶梯。" —— 高尔基</p>
+            </div>
+            
+            <div class="quick-links">
+                <a href="daily-challenge.html">今日挑战</a>
+                <a href="learning-mode.html">学习模式</a>
+                <a href="learning-center.html">学习中心</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 引入JavaScript文件 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 图书滑动功能
+            const slider = document.getElementById('featured-slider');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.addEventListener('click', function() {
+                slider.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                slider.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+            
+            // 收集所有书籍卡片并设置基本属性
+            const bookCards = document.querySelectorAll('.book-card');
+            setupBookAttributes();
+            updateBookLinks();
+            
+            // 更新所有书籍详情链接为百度搜索
+            function updateBookLinks() {
+                bookCards.forEach(card => {
+                    const titleElement = card.querySelector('.book-title');
+                    const authorElement = card.querySelector('.book-author');
+                    const linkElement = card.querySelector('.book-actions a');
+                    
+                    if (titleElement && linkElement && authorElement) {
+                        const title = titleElement.textContent.trim();
+                        const author = authorElement.textContent.replace('作者：', '').trim();
+                        // 创建百度搜索链接，包含书名和作者
+                        const searchUrl = `https://www.baidu.com/s?wd=${encodeURIComponent(title + ' ' + author)}`;
+                        linkElement.href = searchUrl;
+                        linkElement.textContent = '百度搜索';
+                        linkElement.className = 'btn btn-primary';
+                    }
+                });
+            }
+            
+            // 为所有书籍卡片设置必要的数据属性
+            function setupBookAttributes() {
+                // 示例数据，实际项目中可能会通过后端API获取
+                const bookData = {
+                    // 入门书籍
+                    '数独入门与提高': { difficulty: 'easy', rating: 4.9, author: '高姝' },
+                    '数独入门：技巧、解题与练习': { difficulty: 'easy', rating: 4.7, author: '过往光年' },
+                    '数独（入门级）': { difficulty: 'easy', rating: 4.6, author: '宋闯' },
+                    
+                    // 技巧书籍
+                    '数独技巧全解': { difficulty: 'medium', rating: 4.8, author: '吴长风' },
+                    '数独高手之路': { difficulty: 'medium', rating: 4.7, author: '李大伟' },
+                    '数独从入门到精通': { difficulty: 'hard', rating: 4.9, author: '张佳音' },
+                    
+                    // 谜题集
+                    '标准数独解法一本通': { difficulty: 'medium', rating: 4.5, author: '北京市数独运动协会' },
+                    '数独挑战': { difficulty: 'medium', rating: 4.6, author: '西尾彻也' },
+                    '六宫变型数独全集': { difficulty: 'hard', rating: 4.8, author: '北京广播电视台数独发展总部' }
+                };
+                
+                // 为每个书籍卡片添加数据属性
+                bookCards.forEach(card => {
+                    const titleElement = card.querySelector('.book-title');
+                    const authorElement = card.querySelector('.book-author');
+                    const ratingElement = card.querySelector('.book-rating');
+                    
+                    if (titleElement) {
+                        const title = titleElement.textContent;
+                        const bookInfo = bookData[title] || { 
+                            difficulty: 'medium', 
+                            rating: 4.5, 
+                            author: authorElement ? authorElement.textContent.replace('作者：', '') : '未知'
+                        };
+                        
+                        // 只设置尚未设置的数据属性，避免覆盖已有的设置
+                        if (!card.hasAttribute('data-difficulty')) {
+                            card.setAttribute('data-difficulty', bookInfo.difficulty);
+                        }
+                        if (!card.hasAttribute('data-rating')) {
+                            card.setAttribute('data-rating', bookInfo.rating);
+                        }
+                        if (!card.hasAttribute('data-author')) {
+                            card.setAttribute('data-author', bookInfo.author);
+                        }
+                        
+                        // 更新评分显示
+                        if (ratingElement) {
+                            const ratingContent = ratingElement.innerHTML;
+                            if (!ratingContent.includes(bookInfo.rating)) {
+                                ratingElement.innerHTML = `<i class="fas fa-star"></i>${bookInfo.rating}`;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+    
+    <!-- 引入AI助手悬浮球 -->
+    <link rel="stylesheet" href="../css/floating-ball.css">
+    <script src="../js/floating-ball.js"></script>
+</body>
+</html> 

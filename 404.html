@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 页面未找到 | 数独学堂</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .error-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .error-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+        }
+        .error-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #64748b;
+        }
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 150px;
+            height: 150px;
+            margin: 2rem auto;
+        }
+        .sudoku-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f5f9;
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        .sudoku-cell:nth-child(4) {
+            background-color: #4C9DF3; /* 使用新的颜色 */
+            color: #000000;
+        }
+        .sudoku-cell:nth-child(5) {
+            background-color: #f97316;
+            color: white;
+        }
+        .sudoku-cell:nth-child(6) {
+            background-color: #4C9DF3; /* 使用新的颜色 */
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <a href="index.html" class="logo">数独<span>学堂</span></a>
+                <p class="header-slogan">404 - 页面未找到</p>
+            </div>
+            
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="index.html">首页</a>
+                    <a href="pages/daily-challenge.html">每日挑战</a>
+                    <a href="pages/classic-mode.html">经典模式</a>
+                    <a href="pages/learning-mode.html">学习模式</a>
+                    <a href="pages/learning-center.html">学习中心</a>
+                    <a href="pages/recommended-books.html">名著推荐</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="error-container">
+            <h1 class="error-title">404</h1>
+            <p class="error-message">哎呀，您要找的页面好像迷路了！</p>
+            
+            <div class="sudoku-grid">
+                <div class="sudoku-cell"></div>
+                <div class="sudoku-cell"></div>
+                <div class="sudoku-cell"></div>
+                <div class="sudoku-cell">4</div>
+                <div class="sudoku-cell">0</div>
+                <div class="sudoku-cell">4</div>
+                <div class="sudoku-cell"></div>
+                <div class="sudoku-cell"></div>
+                <div class="sudoku-cell"></div>
+            </div>
+            
+            <p class="error-message">别担心，我们可以一起找到回家的路。</p>
+            <a href="index.html" class="btn btn-primary">返回首页</a>
+        </div>
+    </main>
+
+    <!-- 页面底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="quote-carousel">
+                <p>"数独是大脑的瑜伽。" —— 韦恩·古尔德</p>
+            </div>
+            
+            <div class="quick-links">
+                <a href="pages/daily-challenge.html">今日挑战</a>
+                <a href="pages/learning-center.html">学习中心</a>
+                <a href="pages/recommended-books.html">名著推荐</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

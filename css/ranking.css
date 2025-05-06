@@ -1,0 +1,507 @@
+/* 排行榜页面样式 */
+
+/* 主要容器 */
+.ranking-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* 页面标题 */
+.ranking-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.ranking-header h2 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.ranking-header p {
+    color: var(--text-color-secondary);
+    font-size: 1.2rem;
+}
+
+/* 筛选器区域 */
+.ranking-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+}
+
+.filter-group label {
+    margin-right: 0.8rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.filter-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+.view-toggle {
+    display: flex;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.view-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-primary);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* 表格视图 */
+.ranking-table-view {
+    display: none;
+    margin-bottom: 3rem;
+}
+
+.ranking-table-view.active {
+    display: block;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ranking-table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.ranking-table tbody tr {
+    background-color: var(--card-bg);
+    transition: background-color 0.3s;
+}
+
+.ranking-table tbody tr:nth-child(even) {
+    background-color: var(--bg-secondary);
+}
+
+.ranking-table tbody tr:hover {
+    background-color: var(--highlight-bg);
+}
+
+.ranking-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.top-rank {
+    position: relative;
+}
+
+.top-rank .rank-cell {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.player-cell {
+    min-width: 180px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+}
+
+.player-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.player-name {
+    font-weight: 500;
+}
+
+.time-cell {
+    font-family: monospace;
+    font-size: 1.1rem;
+}
+
+/* 网格视图 */
+.ranking-grid-view {
+    display: none;
+    margin-bottom: 3rem;
+}
+
+.ranking-grid-view.active {
+    display: block;
+}
+
+.ranking-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.ranking-card {
+    position: relative;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.ranking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.ranking-card.top-rank {
+    border: 2px solid var(--accent-color);
+}
+
+.card-rank {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.card-medal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: gold;
+    font-size: 1.5rem;
+}
+
+.card-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-info {
+    text-align: center;
+    width: 100%;
+}
+
+.card-name {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    color: var(--text-color);
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.card-detail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--text-color-secondary);
+}
+
+.card-detail i {
+    color: var(--primary-color);
+}
+
+/* 分页控制 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.pagination-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+    color: var(--text-color-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 统计数据 */
+.ranking-stats {
+    margin-bottom: 3rem;
+}
+
+.ranking-stats h3 {
+    font-size: 1.6rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.stat-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 0.2rem;
+}
+
+.stat-label {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+}
+
+/* 我的排名 */
+.my-ranking {
+    margin-bottom: 2rem;
+}
+
+.my-ranking h3 {
+    font-size: 1.6rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.my-ranking-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-avatar {
+    margin-right: 2rem;
+}
+
+.my-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+}
+
+.my-info {
+    flex: 1;
+}
+
+.my-name {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.my-name h4 {
+    font-size: 1.3rem;
+    color: var(--text-color);
+    margin-right: 1rem;
+}
+
+.my-rank {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+.my-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.my-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.view-profile-btn {
+    margin-left: 2rem;
+}
+
+.view-profile-btn .btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-profile-btn .btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+    .ranking-filters {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .my-ranking-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .my-avatar {
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .my-name {
+        justify-content: center;
+    }
+    
+    .my-stats {
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .view-profile-btn {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .ranking-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .my-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .ranking-header h2 {
+        font-size: 2rem;
+    }
+    
+    .filter-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .ranking-grid {
+        grid-template-columns: 1fr;
+    }
+} 
