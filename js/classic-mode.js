@@ -4,6 +4,7 @@
 let selectedNumber = null; // 当前选中的数字
 let selectedCell = null; // 当前选中的单元格
 let notesMode = false; // 笔记模式状态
+let checkMode = false; // 检查模式状态
 let currentGrid = []; // 当前数独状态
 let solutionGrid = []; // 解决方案
 let difficultyLevel = 2; // 默认难度等级（1-5）
@@ -438,6 +439,8 @@ function generateSudoku(difficulty) {
     
     // 更新ID显示
     updatePuzzleId();
+    // 题目生成后同步AI助手
+    if (window.syncSudokuToAI) window.syncSudokuToAI();
 }
 
 /**
@@ -589,10 +592,14 @@ function handleCellClick() {
     // 如果有选中数字且不是笔记模式，直接填入数字
     if (selectedNumber !== null && !notesMode) {
         fillNumber(selectedNumber);
+        // 用户填写数字后同步AI助手
+        if (window.syncSudokuToAI) window.syncSudokuToAI();
     }
     // 如果有选中数字且是笔记模式，更新笔记
     else if (selectedNumber !== null && notesMode) {
         toggleNote(selectedNumber);
+        // 用户填写笔记后同步AI助手
+        if (window.syncSudokuToAI) window.syncSudokuToAI();
     }
 }
 
@@ -672,6 +679,7 @@ function fillNumber(number) {
     if (number === 0) {
         selectedCell.textContent = '';
         currentGrid[index] = 0;
+        selectedCell.classList.remove('error'); // 移除错误标记
         
         // 在selectedCell中找到笔记容器并显示
         const notesContainer = selectedCell.querySelector('.notes');
@@ -686,17 +694,16 @@ function fillNumber(number) {
     selectedCell.textContent = number;
     currentGrid[index] = number;
     
-    // 检查填入的数字是否正确
+    // 如果在检查模式下，检查填入的数字是否正确
+    if (checkMode) {
     if (number !== solutionGrid[index]) {
-        // 错误
         selectedCell.classList.add('error');
-        
-        // 一秒后移除错误样式
-        setTimeout(() => {
-            selectedCell.classList.remove('error');
-        }, 1000);
     } else {
-        // 正确，移除笔记容器
+            selectedCell.classList.remove('error');
+        }
+    }
+    
+    // 移除笔记容器
         const notesContainer = selectedCell.querySelector('.notes');
         if (notesContainer) {
             notesContainer.style.display = 'none';
@@ -704,7 +711,10 @@ function fillNumber(number) {
         
         // 检查是否完成游戏
         checkGameCompletion();
-    }
+
+        // 填入数字后，自动取消数字按钮选中状态，实现单次输入
+        selectedNumber = null;
+        document.querySelectorAll('.number-btn.selected').forEach(el => el.classList.remove('selected'));
 }
 
 /**
@@ -729,6 +739,14 @@ function toggleNote(number) {
     } else {
         noteCell.textContent = '';
     }
+    // 填入笔记后，自动取消数字按钮选中状态，实现单次输入
+    selectedNumber = null;
+    document.querySelectorAll('.number-btn.selected').forEach(el => el.classList.remove('selected'));
+    // 填入笔记后，自动取消单元格选中状态
+    if (selectedCell) {
+        selectedCell.classList.remove('selected');
+        selectedCell = null;
+    }
 }
 
 /**
@@ -748,22 +766,36 @@ function setupFunctionButtons() {
     if (notesBtn && notesStatus) {
         notesBtn.addEventListener('click', function() {
             notesMode = !notesMode;
-            
             // 更新笔记模式状态
             if (notesMode) {
                 notesStatus.textContent = '开启';
-                notesStatus.style.backgroundColor = '#3b82f6';
+                notesStatus.classList.add('active'); // 添加active类，启用动画
             } else {
                 notesStatus.textContent = '关闭';
-                notesStatus.style.backgroundColor = '#6b7280';
+                notesStatus.classList.remove('active'); // 移除active类，关闭动画
             }
         });
     }
     
     // 检查按钮
     const checkBtn = document.getElementById('check-button');
-    if (checkBtn) {
-        checkBtn.addEventListener('click', checkSolution);
+    const checkStatus = document.querySelector('.check-status-indicator');
+    if (checkBtn && checkStatus) {
+        checkBtn.addEventListener('click', function() {
+            checkMode = !checkMode;
+            // 更新检查模式状态
+            if (checkMode) {
+                checkStatus.textContent = '开启';
+                checkStatus.classList.add('active'); // 添加active类，启用动画
+                // 立即检查所有已填数字
+                checkAllNumbers();
+            } else {
+                checkStatus.textContent = '关闭';
+                checkStatus.classList.remove('active'); // 移除active类，关闭动画
+                // 移除所有错误标记
+                removeAllErrorMarks();
+            }
+        });
     }
     
     // 重置按钮
@@ -869,6 +901,16 @@ function checkSolution() {
 function resetGrid() {
     // 确认重置
     if (confirm('确定要重置数独盘吗？所有进度将丢失。')) {
+        // 重置状态
+        currentGrid = Array(81).fill(0);
+        
+        // 遍历所有单元格，只保留初始预设的数字
+        document.querySelectorAll('.sudoku-cell').forEach((cell, index) => {
+            if (cell.classList.contains('preset')) {
+                currentGrid[index] = solutionGrid[index];
+            }
+        });
+        
         // 重新初始化网格
         initSudokuGrid();
         
@@ -878,6 +920,12 @@ function resetGrid() {
         
         // 重置游戏状态
         isGameComplete = false;
+        
+        // 移除所有错误标记
+        removeAllErrorMarks();
+        
+        // 保存重置后的进度
+        saveProgress();
     }
 }
 
@@ -1332,6 +1380,8 @@ function loadPuzzle(puzzle) {
     if (puzzleIdElement) {
         puzzleIdElement.textContent = `ID: ${currentPuzzleId}`;
     }
+    // 题目加载后同步AI助手
+    if (window.syncSudokuToAI) window.syncSudokuToAI();
 }
 
 /**
@@ -1495,4 +1545,44 @@ function setCustomPuzzleName(id, name) {
     const names = JSON.parse(localStorage.getItem('custom_puzzle_names') || '{}');
     names[id] = name;
     localStorage.setItem('custom_puzzle_names', JSON.stringify(names));
-} 
+}
+
+/**
+ * 检查所有已填数字
+ */
+function checkAllNumbers() {
+    document.querySelectorAll('.sudoku-cell').forEach(cell => {
+        const index = parseInt(cell.dataset.index);
+        const number = currentGrid[index];
+        
+        if (number !== 0) {
+            if (number !== solutionGrid[index]) {
+                cell.classList.add('error');
+            } else {
+                cell.classList.remove('error');
+            }
+        }
+    });
+}
+
+/**
+ * 移除所有错误标记
+ */
+function removeAllErrorMarks() {
+    document.querySelectorAll('.sudoku-cell.error').forEach(cell => {
+        cell.classList.remove('error');
+    });
+}
+
+// 监听页面点击，点击空白处时取消所有选中和高亮
+// 只在点击非数独格子时触发
+
+document.addEventListener('click', function (e) {
+    const grid = document.getElementById('classic-grid');
+    if (grid && !grid.contains(e.target)) {
+        document.querySelectorAll('.sudoku-cell.selected, .sudoku-cell.highlight').forEach(cell => {
+            cell.classList.remove('selected', 'highlight');
+        });
+        selectedCell = null;
+    }
+}); 

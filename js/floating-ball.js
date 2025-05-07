@@ -287,29 +287,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // 构建系统提示信息，包含当前数独状态
             let systemPrompt = "你是数独学堂的AI助手，可以帮助用户解答关于数独游戏的问题。请提供简洁、友好的回答，专注于数独规则、技巧、策略等相关内容。回答要有礼貌且专业。";
             
-            // 添加当前数独信息
+            // 优化：无论用户问什么，都附加当前题目网格
             if (sudokuInfo.currentState) {
                 systemPrompt += "\n\n当前用户正在解决的数独题目信息如下：";
                 systemPrompt += `\n- 难度：${sudokuInfo.difficulty}`;
                 systemPrompt += `\n- 完成进度：${sudokuInfo.progress}%`;
                 systemPrompt += `\n- 当前用时：${sudokuInfo.timer}`;
-                
-                if (userMessage.toLowerCase().includes("提示") || 
-                    userMessage.toLowerCase().includes("帮助") || 
-                    userMessage.toLowerCase().includes("下一步") || 
-                    userMessage.toLowerCase().includes("怎么做")) {
-                    // 如果用户明确要求提示，添加更多数独数据
-                    systemPrompt += "\n\n当前数独题目：";
-                    systemPrompt += "\n```\n" + sudokuGridToString(sudokuInfo.currentState) + "\n```";
-                    
-                    // 只在用户明确要求提示时提供解决方案
-                    if ((userMessage.toLowerCase().includes("答案") || 
-                         userMessage.toLowerCase().includes("解法") || 
-                         userMessage.toLowerCase().includes("步骤") ||
-                         userMessage.toLowerCase().includes("提示")) && sudokuInfo.solution) {
-                        systemPrompt += "\n\n数独解决方案：";
-                        systemPrompt += "\n```\n" + sudokuGridToString(sudokuInfo.solution) + "\n```";
-                    }
+                systemPrompt += "\n\n当前数独题目：";
+                systemPrompt += "\n```\n" + sudokuGridToString(sudokuInfo.currentState) + "\n```";
+                if (sudokuInfo.solution) {
+                    systemPrompt += "\n\n数独解决方案：";
+                    systemPrompt += "\n```\n" + sudokuGridToString(sudokuInfo.solution) + "\n```";
                 }
             }
             
@@ -505,3 +493,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/'/g, "&#039;");
     }
 });
+
+// 全局同步函数，供主逻辑调用
+window.syncSudokuToAI = function() {
+    if (typeof getCurrentSudokuInfo === 'function') {
+        const info = getCurrentSudokuInfo();
+        console.log('AI助手已同步最新数独状态:', info);
+        // 可选：在AI助手对话框显示提示
+        // addAssistantMessage('已同步最新题目状态');
+    }
+};

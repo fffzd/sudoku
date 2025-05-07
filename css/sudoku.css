@@ -812,4 +812,13 @@
     .note {
         font-size: 8px;
     }
+}
+
+.sudoku-cell.preset {
+    background-color: #e6f0ff !important;
+}
+
+.cell.fixed,
+.sudoku-cell.preset {
+    background-color: #e6f0ff !important;
 } 

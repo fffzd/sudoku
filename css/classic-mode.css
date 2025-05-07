@@ -256,6 +256,11 @@
     color: #ef4444;
 }
 
+.cell.fixed,
+.sudoku-cell.preset {
+    background-color: #e6f0ff !important;
+}
+
 /* 3x3宫格边框 */
 .cell:nth-child(3n) {
     border-right: 2px solid #1f2937;
@@ -801,12 +806,22 @@ body.classic-theme {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s ease;
 }
 
 .function-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #e6f0ff;
+}
+
+.function-btn.active {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.function-btn.active:hover {
+    background-color: #e6f0ff;
 }
 
 .function-btn i {
@@ -839,6 +854,15 @@ body.classic-theme {
     background-color: #3b82f6;
 }
 
+.notes-mode-btn.active .function-btn {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.notes-mode-btn.active .function-btn:hover {
+    background-color: #e6f0ff;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     .function-buttons {
@@ -850,4 +874,8 @@ body.classic-theme {
         flex: 1 0 calc(50% - 10px);
         min-width: auto;
     }
+}
+
+.sudoku-cell.preset {
+    background-color: #e6f0ff !important; /* 浅蓝色背景，提升辨识度 */
 } 

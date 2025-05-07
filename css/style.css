@@ -389,7 +389,7 @@ footer {
 
 /* 高亮和错误状态 */
 .sudoku-cell.highlight {
-  background-color: #dbeafe; /* 浅蓝色高亮 */
+  background-color: #d1fae5 !important; /* 柔和浅绿色高亮 */
 }
 
 .sudoku-cell.error {
@@ -1166,4 +1166,12 @@ main {
     position: relative;
     z-index: 20; /* 确保在其他元素之上 */
     margin-bottom: 20px;
+}
+
+.sudoku-cell.preset {
+    background-color: #e6f0ff !important;
+}
+
+.sudoku-cell.preset.highlight {
+    background-color: #d1fae5 !important;
 } 
