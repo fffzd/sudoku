@@ -771,6 +771,19 @@ function setupFunctionButtons() {
     if (resetBtn) {
         resetBtn.addEventListener('click', resetGrid);
     }
+
+    // 清空笔记按钮
+    const clearNotesBtn = document.getElementById('clear-note-btn');
+    if (clearNotesBtn) {
+        clearNotesBtn.addEventListener('click', function() {
+            // 清空所有单元格的笔记
+            document.querySelectorAll('.sudoku-cell.editable .notes').forEach(notesContainer => {
+                notesContainer.querySelectorAll('.note-cell').forEach(noteCell => {
+                    noteCell.textContent = '';
+                });
+            });
+        });
+    }
 }
 
 /**
@@ -1223,8 +1236,15 @@ function populateLibraryItems(searchTerm = '', category = '精选题库') {
                 document.querySelector('.sudoku-grid').scrollIntoView({ behavior: 'smooth' });
             }
         });
-        // 其余按钮事件...
-        // ... existing code ...
+        // 删除按钮事件绑定
+        const deleteBtn = puzzleItem.querySelector('.btn-delete');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止冒泡
+                const puzzleId = this.getAttribute('data-id');
+                deletePuzzleFromLibrary(puzzleId);
+            });
+        }
         puzzleListContainer.appendChild(puzzleItem);
     });
     
