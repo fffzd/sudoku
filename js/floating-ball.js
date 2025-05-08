@@ -137,8 +137,11 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         try {
-            // 从DOM元素直接读取当前数独状态
-            const sudokuCells = document.querySelectorAll('.sudoku-cell');
+            // 只抓主盘classic-grid下的格子
+            const mainGrid = document.getElementById('classic-grid');
+            const sudokuCells = mainGrid ? mainGrid.querySelectorAll('.sudoku-cell') : [];
+            // 调试输出
+            console.log('AI助手同步时抓到的格子内容：', [...sudokuCells].map(cell => cell.textContent));
             if (sudokuCells && sudokuCells.length === 81) {
                 // 创建9x9的二维数组来存储当前状态
                 let currentStateGrid = Array(9).fill().map(() => Array(9).fill(0));
@@ -237,10 +240,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 调用聊天API
     async function callChatAPI(userMessage) {
+        // 增加延迟，确保页面渲染完成
+        await new Promise(r => setTimeout(r, 50));
+        // 获取最新数独信息
+        const sudokuInfo = getCurrentSudokuInfo();
+        // 调试输出
+        console.log('AI助手实际上传的currentState：', sudokuInfo.currentState);
+        
         try {
-            // 获取当前数独信息并添加调试信息
-            const sudokuInfo = getCurrentSudokuInfo();
-            
             // 添加调试消息
             if (userMessage.toLowerCase().includes("调试") || userMessage.toLowerCase().includes("debug")) {
                 // 直接返回调试信息，不调用API

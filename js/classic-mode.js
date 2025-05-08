@@ -1,5 +1,5 @@
 // 数独学堂 - 经典模式JavaScript文件
-
+console.log('classic-mode.js 已加载');
 // 全局变量
 let selectedNumber = null; // 当前选中的数字
 let selectedCell = null; // 当前选中的单元格
@@ -680,41 +680,43 @@ function fillNumber(number) {
         selectedCell.textContent = '';
         currentGrid[index] = 0;
         selectedCell.classList.remove('error'); // 移除错误标记
-        
         // 在selectedCell中找到笔记容器并显示
         const notesContainer = selectedCell.querySelector('.notes');
         if (notesContainer) {
             notesContainer.style.display = '';
         }
-        
-        return;
-    }
-    
-    // 填入数字
-    selectedCell.textContent = number;
-    currentGrid[index] = number;
-    
-    // 如果在检查模式下，检查填入的数字是否正确
-    if (checkMode) {
-    if (number !== solutionGrid[index]) {
-        selectedCell.classList.add('error');
     } else {
+        // 填写数字
+        selectedCell.textContent = number;
+        currentGrid[index] = number;
+        
+        // 检查是否正确
+        if (checkMode && number !== solutionGrid[index]) {
+            selectedCell.classList.add('error');
+        } else {
             selectedCell.classList.remove('error');
         }
-    }
-    
-    // 移除笔记容器
+        
+        // 隐藏笔记容器
         const notesContainer = selectedCell.querySelector('.notes');
         if (notesContainer) {
             notesContainer.style.display = 'none';
         }
-        
-        // 检查是否完成游戏
-        checkGameCompletion();
+    }
+    
+    // 更新DOM
+    updateSudokuGridFromCurrentGrid();
+    
+    // 调试输出
+    console.log('填写数字后的currentGrid:', currentGrid);
+    console.log('填写数字后的DOM内容:', [...document.querySelectorAll('.sudoku-cell')].map(cell => cell.textContent));
+    
+    // 检查游戏是否完成
+    checkGameCompletion();
 
-        // 填入数字后，自动取消数字按钮选中状态，实现单次输入
-        selectedNumber = null;
-        document.querySelectorAll('.number-btn.selected').forEach(el => el.classList.remove('selected'));
+    // 填入数字后，自动取消数字按钮选中状态，实现单次输入
+    selectedNumber = null;
+    document.querySelectorAll('.number-btn.selected').forEach(el => el.classList.remove('selected'));
 }
 
 /**
@@ -925,7 +927,7 @@ function resetGrid() {
         removeAllErrorMarks();
         
         // 保存重置后的进度
-        saveProgress();
+        updateSudokuGridFromCurrentGrid();
     }
 }
 
@@ -1585,4 +1587,23 @@ document.addEventListener('click', function (e) {
         });
         selectedCell = null;
     }
-}); 
+});
+
+// 新增：同步currentGrid到DOM的函数
+function updateSudokuGridFromCurrentGrid() {
+    // 调试输出
+    console.log('正在同步DOM和currentGrid...');
+    
+    const cells = document.querySelectorAll('.sudoku-cell');
+    cells.forEach((cell, index) => {
+        const number = currentGrid[index];
+        if (number !== 0) {
+            cell.textContent = number;
+        } else {
+            cell.textContent = '';
+        }
+    });
+    
+    // 调试输出
+    console.log('同步完成，当前DOM内容:', [...cells].map(cell => cell.textContent));
+} 
